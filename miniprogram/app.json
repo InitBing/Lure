@@ -13,7 +13,15 @@
     "pages/search/search",
     "pages/message/message",
     "pages/profile/profile",
-    "pages/video/video"
+    "pages/video/video",
+    "pages/pond/pond",
+    "pages/pond-detail/pond-detail",
+    "pages/event-detail/event-detail",
+    "pages/event-list/event-list",
+    "pages/join-event/join-event",
+    "pages/apply-owner/apply-owner",
+    "pages/my-participants/my-participants",
+    "pages/review-event/review-event"
   ],
   "window": {
     "backgroundTextStyle": "dark",

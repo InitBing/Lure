@@ -417,7 +417,7 @@ async function payParticipant(ctx) {
     throw new BusinessError('已支付', 40001);
   }
   
-  // 更新支付状态
+  // 更新支付状态 (实际应调起支付接口)
   await participant.update({
     payment_status: 1,
     payment_method: payment_method || 1,
@@ -432,6 +432,49 @@ async function payParticipant(ctx) {
   ctx.body = {
     code: 0,
     message: '支付成功'
+  };
+}
+
+/**
+ * 活动签到
+ * POST /api/v1/pond/participants/:id/checkin
+ */
+async function checkinParticipant(ctx) {
+  const userId = ctx.state.user.id;
+  const participantId = parseInt(ctx.params.id);
+  
+  const participant = await EventParticipant.findByPk(participantId);
+  if (!participant || participant.user_id !== userId) {
+    throw new BusinessError('报名记录不存在', 40400);
+  }
+  
+  if (participant.payment_status !== 1) {
+    throw new BusinessError('请先支付报名费', 40001);
+  }
+  
+  if (participant.check_in_status === 1) {
+    throw new BusinessError('已签到', 40001);
+  }
+  
+  // 检查活动是否开始
+  const event = await PondEvent.findByPk(participant.event_id);
+  const now = new Date();
+  const eventDateTime = new Date(`${event.event_date} ${event.start_time}`);
+  
+  // 允许提前 30 分钟签到
+  if (now < new Date(eventDateTime.getTime() - 30 * 60 * 1000)) {
+    throw new BusinessError('活动尚未开始，不能签到', 40001);
+  }
+  
+  // 更新签到状态
+  await participant.update({
+    check_in_status: 1,
+    check_in_time: new Date()
+  });
+  
+  ctx.body = {
+    code: 0,
+    message: '签到成功'
   };
 }
 

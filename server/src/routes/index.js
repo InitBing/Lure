@@ -133,6 +133,7 @@ router.get('/pond/events/:id', pondController.getEvent);
 router.post('/pond/events/:id/join', requireAuth(), pondController.joinEvent);
 router.get('/pond/participants', requireAuth(), pondController.myParticipants);
 router.post('/pond/participants/:id/pay', requireAuth(), pondController.payParticipant);
+router.post('/pond/participants/:id/checkin', requireAuth(), pondController.checkinParticipant);
 router.post('/pond/ponds/:id/review', requireAuth(), pondController.createReview);
 
 // 搜索路由

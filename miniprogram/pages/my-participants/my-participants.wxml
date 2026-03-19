@@ -1,0 +1,54 @@
+<!-- 我的报名页面 -->
+<view class="container">
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">
+      全部
+    </view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">
+      报名中
+    </view>
+    <view class="tab-item {{currentTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-tab="2">
+      已完成
+    </view>
+  </view>
+
+  <!-- 报名列表 -->
+  <scroll-view class="list-scroll" scroll-y bindscrolltolower="loadMore">
+    <view class="participant-card" wx:for="{{participantList}}" wx:key="id" bindtap="goEvent" data-id="{{item.event.id}}">
+      <view class="card-header">
+        <text class="event-type">{{eventTypeMap[item.event.event_type]}}</text>
+        <text class="status-tag {{getStatusClass(item.status, item.payment_status)}}">
+          {{getStatusText(item.status, item.payment_status)}}
+        </text>
+      </view>
+      <view class="event-title">{{item.event.title}}</view>
+      <view class="event-info">
+        <text class="info-item">📅 {{item.event.event_date}}</text>
+        <text class="info-item">📍 {{item.event.pond.name}}</text>
+      </view>
+      <view class="event-info">
+        <text class="info-item">🎣 {{item.rod_count}}根竿</text>
+        <text class="info-item">💰 ¥{{item.fee_amount}}</text>
+      </view>
+      <view class="card-footer">
+        <text class="time">报名时间：{{item.created_at}}</text>
+        <view class="actions" wx:if="{{item.payment_status === 0}}">
+          <button class="pay-btn" size="mini" bindtap="goPay" data-id="{{item.id}}">去支付</button>
+        </view>
+        <view class="actions" wx:if="{{item.payment_status === 1 && item.check_in_status === 0}}">
+          <button class="checkin-btn" size="mini" bindtap="showCheckin" data-id="{{item.id}}">签到</button>
+        </view>
+        <view class="actions" wx:if="{{item.status === 2}}">
+          <button class="review-btn" size="mini" bindtap="goReview" data-id="{{item.id}}">评价</button>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="no-more" wx:if="{{!hasMore && participantList.length > 0}}">没有更多了</view>
+  <view class="empty" wx:if="{{participantList.length === 0 && !loading}}">
+    <text>暂无报名记录</text>
+  </view>
+</view>

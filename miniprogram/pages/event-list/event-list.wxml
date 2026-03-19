@@ -1,0 +1,47 @@
+<!-- 活动列表页面 -->
+<view class="container">
+  <!-- 筛选栏 -->
+  <view class="filters">
+    <view class="filter-item {{filters.type ? '' : 'active'}}" bindtap="selectType">
+      {{filters.type || '全部类型'}}
+    </view>
+    <view class="filter-item {{filters.status !== undefined ? '' : 'active'}}" bindtap="selectStatus">
+      {{filters.status === undefined ? '全部状态' : (filters.status === 0 ? '报名中' : '已结束')}}
+    </view>
+    <view class="filter-item {{filters.date ? '' : 'active'}}" bindtap="selectDate">
+      {{filters.date || '全部日期'}}
+    </view>
+  </view>
+
+  <!-- 活动列表 -->
+  <scroll-view class="list-scroll" scroll-y bindscrolltolower="loadMore">
+    <view class="event-card" wx:for="{{eventList}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="cover" src="{{item.cover_url || '/images/default-event.png'}}" mode="aspectFill" />
+      <view class="event-info">
+        <view class="event-header">
+          <text class="event-type">{{eventTypeMap[item.event_type]}}</text>
+          <text class="status-tag {{item.status === 0 ? 'active' : ''}}">
+            {{item.status === 0 ? '报名中' : item.status === 1 ? '已满员' : '已结束'}}
+          </text>
+        </view>
+        <view class="event-title">{{item.title}}</view>
+        <view class="pond-name">📍 {{item.pond.name}}</view>
+        <view class="event-meta">
+          <text>📅 {{item.event_date}}</text>
+          <text>⏰ {{item.start_time}}</text>
+        </view>
+        <view class="event-footer">
+          <text class="fee">💰 ¥{{item.fee_amount}}</text>
+          <text class="participants">👥 {{item.current_participants}}/{{item.max_participants || '?'}}</text>
+          <text class="prize" wx:if="{{item.prize_pool}}">🏆 ¥{{item.prize_pool}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="no-more" wx:if="{{!hasMore && eventList.length > 0}}">没有更多了</view>
+  <view class="empty" wx:if="{{eventList.length === 0 && !loading}}">
+    <text>暂无活动</text>
+  </view>
+</view>
