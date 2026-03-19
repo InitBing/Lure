@@ -1,0 +1,66 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/spots/spots",
+    "pages/publish/publish",
+    "pages/market/market",
+    "pages/mine/mine",
+    "pages/spot-detail/spot-detail",
+    "pages/log-detail/log-detail",
+    "pages/item-detail/item-detail",
+    "pages/publish-log/publish-log",
+    "pages/publish-item/publish-item",
+    "pages/search/search",
+    "pages/message/message",
+    "pages/profile/profile",
+    "pages/video/video"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#2E7D32",
+    "navigationBarTitleText": "LureBin",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#2E7D32",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/spots/spots",
+        "text": "钓点",
+        "iconPath": "images/tab/spot.png",
+        "selectedIconPath": "images/tab/spot-active.png"
+      },
+      {
+        "pagePath": "pages/publish/publish",
+        "text": "发布",
+        "iconPath": "images/tab/publish.png",
+        "selectedIconPath": "images/tab/publish-active.png"
+      },
+      {
+        "pagePath": "pages/market/market",
+        "text": "市场",
+        "iconPath": "images/tab/market.png",
+        "selectedIconPath": "images/tab/market-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tab/mine.png",
+        "selectedIconPath": "images/tab/mine-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2"
+}

@@ -1,0 +1,67 @@
+<!-- 二手市场页面 -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="goSearch">
+      <text class="icon">🔍</text>
+      <text class="placeholder">搜索拟饵、竿子、轮子...</text>
+    </view>
+  </view>
+
+  <!-- 分类 -->
+  <scroll-view class="categories" scroll-x>
+    <view class="category-item {{currentCate === 0 ? 'active' : ''}}" bindtap="switchCate" data-cate="0">
+      全部
+    </view>
+    <view class="category-item {{currentCate === 1 ? 'active' : ''}}" bindtap="switchCate" data-cate="1">
+      拟饵
+    </view>
+    <view class="category-item {{currentCate === 2 ? 'active' : ''}}" bindtap="switchCate" data-cate="2">
+      竿子
+    </view>
+    <view class="category-item {{currentCate === 3 ? 'active' : ''}}" bindtap="switchCate" data-cate="3">
+      轮子
+    </view>
+    <view class="category-item {{currentCate === 4 ? 'active' : ''}}" bindtap="switchCate" data-cate="4">
+      线组
+    </view>
+    <view class="category-item {{currentCate === 5 ? 'active' : ''}}" bindtap="switchCate" data-cate="5">
+      配件
+    </view>
+  </scroll-view>
+
+  <!-- 商品列表 -->
+  <view class="item-list">
+    <view class="item-card" wx:for="{{itemList}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="main-img" src="{{item.photos[0] || '/images/default-item.png'}}" mode="aspectFill" />
+      <view class="item-info">
+        <view class="title">{{item.title}}</view>
+        <view class="brand">{{item.brand}} {{item.model}}</view>
+        <view class="price">
+          <text class="current">¥{{item.price}}</text>
+          <text class="original" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+        </view>
+        <view class="meta">
+          <text class="location">📍 {{item.province}}{{item.city}}</text>
+          <text class="condition">成色：{{item.condition_text}}</text>
+        </view>
+        <view class="seller">
+          <image class="avatar" src="{{item.seller.avatar}}" />
+          <text class="name">{{item.seller.nickname}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="no-more" wx:if="{{!hasMore && itemList.length > 0}}">没有更多了</view>
+  <view class="empty" wx:if="{{itemList.length === 0 && !loading}}">
+    <text>暂无商品</text>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="goPublish">
+    <text>+</text>
+  </view>
+</view>

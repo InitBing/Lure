@@ -1,0 +1,155 @@
+/**
+ * 首页样式
+ */
+
+.container {
+  padding-bottom: 40rpx;
+}
+
+/* 搜索栏 */
+.search-bar {
+  padding: 20rpx 24rpx;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 44rpx;
+  padding: 16rpx 24rpx;
+  color: #999;
+  font-size: 26rpx;
+}
+
+.search-input .icon-search {
+  margin-right: 12rpx;
+  font-size: 28rpx;
+}
+
+/* Banner */
+.banner {
+  padding: 0;
+  overflow: hidden;
+}
+
+.swiper {
+  height: 320rpx;
+}
+
+.banner-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* Tab 切换 */
+.tab-bar {
+  display: flex;
+  background-color: #fff;
+  border-radius: 12rpx;
+  padding: 8rpx;
+  margin-bottom: 24rpx;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  color: #666;
+  font-size: 26rpx;
+  border-radius: 8rpx;
+  transition: all 0.2s;
+}
+
+.tab-item.active {
+  background-color: #2E7D32;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* 快捷入口 */
+.quick-entry {
+  padding: 32rpx 24rpx;
+}
+
+.entry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.entry-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.entry-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 动态列表 */
+.feed-item {
+  padding: 24rpx;
+}
+
+.feed-header {
+  align-items: center;
+}
+
+.feed-catch {
+  display: flex;
+  align-items: center;
+}
+
+/* 图片布局 */
+.feed-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-top: 16rpx;
+}
+
+.feed-image {
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.feed-image.single {
+  width: 100%;
+  height: 400rpx;
+}
+
+.feed-image.grid-2 {
+  width: calc(50% - 4rpx);
+  height: 300rpx;
+}
+
+.feed-image.grid-3 {
+  width: calc(33.33% - 6rpx);
+  height: 200rpx;
+}
+
+/* 互动区 */
+.feed-actions {
+  align-items: center;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.action-item .iconfont {
+  margin-right: 8rpx;
+  font-size: 28rpx;
+}
+
+.action-item .iconfont.active {
+  color: #ff4d4f;
+}
+
+.action-text {
+  font-size: 22rpx;
+}

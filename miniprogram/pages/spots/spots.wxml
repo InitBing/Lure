@@ -1,0 +1,81 @@
+<!-- 钓点页面 -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="goSearch">
+      <text class="icon">🔍</text>
+      <text class="placeholder">搜索钓点、鱼种...</text>
+    </view>
+  </view>
+
+  <!-- 切换按钮 -->
+  <view class="mode-switch">
+    <view class="mode-btn {{mode === 'list' ? 'active' : ''}}" bindtap="switchMode" data-mode="list">
+      列表
+    </view>
+    <view class="mode-btn {{mode === 'map' ? 'active' : ''}}" bindtap="switchMode" data-mode="map">
+      地图
+    </view>
+  </view>
+
+  <!-- 筛选条件 -->
+  <view class="filters">
+    <view class="filter-item" bindtap="showFilter" data-type="city">
+      {{filters.city || '全部城市'}}
+    </view>
+    <view class="filter-item" bindtap="showFilter" data-type="water_type">
+      {{filters.water_type || '水域类型'}}
+    </view>
+    <view class="filter-item" bindtap="showFilter" data-type="fish_type">
+      {{filters.fish_type || '鱼种'}}
+    </view>
+    <view class="filter-item" bindtap="showFilter" data-type="sort">
+      {{filters.sort || '排序'}}
+    </view>
+  </view>
+
+  <!-- 列表模式 -->
+  <view class="spot-list" wx:if="{{mode === 'list'}}">
+    <view class="spot-item" wx:for="{{spotList}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="cover" src="{{item.cover_url || '/images/default-spot.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="name">{{item.name}}</view>
+        <view class="location">📍 {{item.city}} · 距{{item.distance || '?'}}km</view>
+        <view class="tags">
+          <text class="tag" wx:for="{{item.fish_types || []}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="meta">
+          <text>⭐ {{item.avg_rating || 0}}</text>
+          <text>👥 {{item.review_count || 0}}评价</text>
+          <text>{{item.fee_status === 1 ? '免费' : '¥' + item.fee_amount}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图模式 -->
+  <view class="map-container" wx:if="{{mode === 'map'}}">
+    <map
+      id="spotMap"
+      class="map"
+      latitude="{{mapCenter.lat}}"
+      longitude="{{mapCenter.lng}}"
+      scale="14"
+      markers="{{markers}}"
+      show-location="true"
+      bindmarkertap="onMarkerTap"
+    />
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="no-more" wx:if="{{!hasMore && spotList.length > 0}}">没有更多了</view>
+  <view class="empty" wx:if="{{spotList.length === 0 && !loading}}">
+    <text>暂无钓点数据</text>
+  </view>
+
+  <!-- 添加钓点按钮 -->
+  <view class="fab" bindtap="goAdd">
+    <text>+</text>
+  </view>
+</view>

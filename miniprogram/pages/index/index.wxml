@@ -1,0 +1,120 @@
+<!--首页-->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar card">
+    <view class="search-input" bindtap="goSearch">
+      <text class="iconfont icon-search"></text>
+      <text class="placeholder">搜索钓点/拟饵/商品</text>
+    </view>
+  </view>
+
+  <!-- Banner 轮播 -->
+  <view class="banner card">
+    <swiper class="swiper" indicator-dots autoplay circular>
+      <swiper-item wx:for="{{banners}}" wx:key="id">
+        <image class="banner-image" src="{{item.image}}" mode="aspectFill" bindtap="goBanner" data-url="{{item.url}}"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tab-bar">
+    <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0">关注</view>
+    <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1">推荐</view>
+    <view class="tab-item {{currentTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2">资讯</view>
+    <view class="tab-item {{currentTab === 3 ? 'active' : ''}}" bindtap="switchTab" data-index="3">视频</view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-entry card flex flex-between">
+    <view class="entry-item" bindtap="goWeather">
+      <view class="entry-icon">🌤</view>
+      <text class="entry-text">天气</text>
+    </view>
+    <view class="entry-item" bindtap="goTide">
+      <view class="entry-icon">🌊</view>
+      <text class="entry-text">潮汐</text>
+    </view>
+    <view class="entry-item" bindtap="goBeginner">
+      <view class="entry-icon">📚</view>
+      <text class="entry-text">新手入门</text>
+    </view>
+    <view class="entry-item" bindtap="goMap">
+      <view class="entry-icon">🗺</view>
+      <text class="entry-text">钓点地图</text>
+    </view>
+  </view>
+
+  <!-- 动态流 -->
+  <view class="feed-list">
+    <view class="feed-item card" wx:for="{{feedList}}" wx:key="id" bindtap="goLogDetail" data-id="{{item.id}}">
+      <!-- 用户信息 -->
+      <view class="feed-header flex flex-between mb-2">
+        <view class="user-info flex">
+          <image class="avatar avatar-sm" src="{{item.user.avatar}}" mode="aspectFill"></image>
+          <view class="ml-2">
+            <text class="text-primary text-bold">{{item.user.nickname}}</text>
+            <view class="text-hint text-sm">
+              <text>📍 {{item.spot_name}}</text>
+              <text class="ml-2">🕐 {{item.created_at}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 渔获信息 -->
+      <view class="feed-catch mb-2" wx:if="{{item.max_length}}">
+        <text class="badge badge-primary">🐟 {{item.max_length}}cm</text>
+        <text class="badge ml-2">🎣 {{item.catch_count}}尾</text>
+      </view>
+
+      <!-- 图片 -->
+      <view class="feed-images" wx:if="{{item.photos && item.photos.length > 0}}">
+        <image 
+          class="feed-image {{item.photos.length === 1 ? 'single' : (item.photos.length <= 4 ? 'grid-2' : 'grid-3')}}" 
+          src="{{item.photos[0]}}" 
+          mode="aspectFill"
+          wx:for="{{item.photos}}"
+          wx:key="*this"
+          wx:for-item="photo"
+        ></image>
+      </view>
+
+      <!-- 心得 -->
+      <view class="feed-notes text-secondary mt-2" wx:if="{{item.notes}}">
+        {{item.notes}}
+      </view>
+
+      <!-- 拟饵 -->
+      <view class="feed-lures mt-2" wx:if="{{item.lures_used && item.lures_used.length > 0}}">
+        <text class="text-hint text-sm">🎯 使用拟饵：</text>
+        <text class="text-primary text-sm">{{item.lures_used[0].brand}} {{item.lures_used[0].model}}</text>
+      </view>
+
+      <!-- 互动 -->
+      <view class="feed-actions flex flex-between mt-3 pt-3" style="border-top: 2rpx solid #f5f5f5;">
+        <view class="action-item" bindtap="like" data-id="{{item.id}}">
+          <text class="iconfont icon-like {{item.is_liked ? 'active' : ''}}"></text>
+          <text class="action-text">{{item.like_count}}</text>
+        </view>
+        <view class="action-item">
+          <text class="iconfont icon-comment"></text>
+          <text class="action-text">{{item.comment_count}}</text>
+        </view>
+        <view class="action-item" bindtap="favorite" data-id="{{item.id}}">
+          <text class="iconfont icon-star {{item.is_favorited ? 'active' : ''}}"></text>
+          <text class="action-text">{{item.favorite_count}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="text-center text-hint mt-3 mb-4" wx:if="{{!hasMore && feedList.length > 0}}">— 没有更多了 —</view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{feedList.length === 0 && !loading}}">
+    <text class="text-hint">暂无动态，快去发布第一条吧~</text>
+  </view>
+</view>
