@@ -1,0 +1,151 @@
+<!-- 作钓记录详情页面 -->
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-header card">
+    <view class="user-info">
+      <image class="avatar" src="{{log.user.avatar}}" />
+      <view class="user-detail">
+        <view class="nickname">{{log.user.nickname}}</view>
+        <view class="date">{{log.log_date}}</view>
+      </view>
+    </view>
+    <view class="follow-btn" wx:if="{{!isFollowing}}" bindtap="toggleFollow">+ 关注</view>
+    <view class="following-btn" wx:else bindtap="toggleFollow">已关注</view>
+  </view>
+
+  <!-- 钓点信息 -->
+  <view class="spot-info card" wx:if="{{log.spot_name}}" bindtap="goSpot">
+    <text class="icon">📍</text>
+    <text class="name">{{log.spot_name}}</text>
+    <text class="arrow">›</text>
+  </view>
+
+  <!-- 环境信息 -->
+  <view class="env-card card">
+    <view class="env-grid">
+      <view class="env-item">
+        <text class="icon">{{weatherMap[log.weather]}}</text>
+        <text class="label">天气</text>
+      </view>
+      <view class="env-item" wx:if="{{log.temperature}}">
+        <text class="value">{{log.temperature}}°C</text>
+        <text class="label">气温</text>
+      </view>
+      <view class="env-item" wx:if="{{log.water_temp}}">
+        <text class="value">{{log.water_temp}}°C</text>
+        <text class="label">水温</text>
+      </view>
+      <view class="env-item" wx:if="{{log.wind}}">
+        <text class="value">{{log.wind}}</text>
+        <text class="label">风力</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 渔获展示 -->
+  <view class="catch-card card" wx:if="{{catches.length > 0}}">
+    <view class="section-title">渔获</view>
+    <view class="catch-list">
+      <view class="catch-item" wx:for="{{catches}}" wx:key="id">
+        <image class="catch-img" src="{{item.photo_url}}" mode="aspectFill" />
+        <view class="catch-info">
+          <view class="fish-type">{{item.fish_type}}</view>
+          <view class="fish-size">
+            <text wx:if="{{item.length}}">{{item.length}}cm</text>
+            <text wx:if="{{item.weight}}">{{item.weight}}g</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 装备信息 -->
+  <view class="gear-card card" wx:if="{{log.lures_used || log.rod || log.reel}}">
+    <view class="section-title">使用装备</view>
+    <view class="gear-list">
+      <view class="gear-item" wx:if="{{log.rod}}">
+        <text class="icon">🎣</text>
+        <text class="text">{{log.rod}}</text>
+      </view>
+      <view class="gear-item" wx:if="{{log.reel}}">
+        <text class="icon">🎣</text>
+        <text class="text">{{log.reel}}</text>
+      </view>
+      <view class="gear-item" wx:for="{{log.lures_used || []}}" wx:key="*this">
+        <text class="icon">🎯</text>
+        <text class="text">{{item.brand}} {{item.model}} ({{item.color}})</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 心得描述 -->
+  <view class="notes-card card" wx:if="{{log.notes}}">
+    <view class="section-title">作钓心得</view>
+    <view class="notes-content">{{log.notes}}</view>
+  </view>
+
+  <!-- 照片墙 -->
+  <view class="photo-card card" wx:if="{{log.photos && log.photos.length > 0}}">
+    <view class="section-title">照片</view>
+    <view class="photo-grid">
+      <image
+        class="photo-item"
+        wx:for="{{log.photos}}"
+        wx:key="*this"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="previewImage"
+        data-index="{{index}}"
+      />
+    </view>
+  </view>
+
+  <!-- 互动数据 -->
+  <view class="interaction-card card">
+    <view class="interaction-row">
+      <view class="inter-item" bindtap="toggleLike">
+        <text class="icon">{{isLiked ? '❤️' : '🤍'}}</text>
+        <text class="count">{{log.like_count || 0}}</text>
+      </view>
+      <view class="inter-item" bindtap="toggleFavorite">
+        <text class="icon">{{isFavorited ? '⭐' : '☆'}}</text>
+        <text class="count">{{log.favorite_count || 0}}</text>
+      </view>
+      <view class="inter-item" bindtap="goComments">
+        <text class="icon">💬</text>
+        <text class="count">{{log.comment_count || 0}}</text>
+      </view>
+      <view class="inter-item" bindtap="share">
+        <text class="icon">📤</text>
+        <text class="count">分享</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="comments-card card">
+    <view class="section-title">评论</view>
+    <view class="comment-list">
+      <view class="comment-item" wx:for="{{commentList}}" wx:key="id">
+        <image class="comment-avatar" src="{{item.user.avatar}}" />
+        <view class="comment-content">
+          <view class="comment-user">{{item.user.nickname}}</view>
+          <view class="comment-text">{{item.content}}</view>
+          <view class="comment-meta">
+            <text class="comment-time">{{item.created_at}}</text>
+            <text class="comment-like" bindtap="likeComment" data-id="{{item.id}}">👍 {{item.like_count || 0}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{commentList.length === 0}}">暂无评论，快来抢沙发</view>
+  </view>
+
+  <!-- 底部输入框 -->
+  <view class="comment-input-bar">
+    <view class="input-wrapper">
+      <input class="comment-input" placeholder="写下你的评论..." value="{{commentText}}" bindinput="onInput" />
+      <view class="send-btn" bindtap="sendComment">发送</view>
+    </view>
+  </view>
+</view>

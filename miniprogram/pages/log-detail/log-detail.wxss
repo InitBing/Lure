@@ -1,0 +1,294 @@
+/* 作钓记录详情页面 */
+.container {
+  padding-bottom: 160rpx;
+  background: #f5f5f5;
+}
+
+.card {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.user-header .avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.user-detail .nickname {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.user-detail .date {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.follow-btn, .following-btn {
+  padding: 12rpx 30rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+}
+
+.follow-btn {
+  background: #2E7D32;
+  color: #fff;
+}
+
+.following-btn {
+  background: #f5f5f5;
+  color: #666;
+  border: 1rpx solid #e0e0e0;
+}
+
+.spot-info {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.spot-info .icon {
+  font-size: 32rpx;
+}
+
+.spot-info .name {
+  flex: 1;
+}
+
+.spot-info .arrow {
+  color: #ccc;
+}
+
+.env-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.env-item {
+  text-align: center;
+}
+
+.env-item .icon {
+  font-size: 40rpx;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.env-item .value {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+  margin-bottom: 4rpx;
+}
+
+.env-item .label {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.catch-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+.catch-item {
+  background: #f9f9f9;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.catch-img {
+  width: 100%;
+  height: 200rpx;
+}
+
+.catch-info {
+  padding: 16rpx;
+  text-align: center;
+}
+
+.catch-info .fish-type {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.catch-info .fish-size {
+  font-size: 24rpx;
+  color: #2E7D32;
+}
+
+.gear-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.gear-item {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.gear-item .icon {
+  font-size: 32rpx;
+}
+
+.notes-content {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10rpx;
+}
+
+.photo-item {
+  width: 100%;
+  height: 200rpx;
+  border-radius: 8rpx;
+}
+
+.interaction-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.inter-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.inter-item .icon {
+  font-size: 40rpx;
+}
+
+.inter-item .count {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16rpx;
+}
+
+.comment-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-user {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 12rpx;
+}
+
+.comment-meta {
+  display: flex;
+  gap: 20rpx;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.comment-like {
+  cursor: pointer;
+}
+
+.comment-input-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 10rpx;
+  align-items: center;
+}
+
+.comment-input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 24rpx;
+  background: #f5f5f5;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+}
+
+.send-btn {
+  padding: 16rpx 32rpx;
+  background: #2E7D32;
+  color: #fff;
+  border-radius: 36rpx;
+  font-size: 28rpx;
+}
+
+.empty {
+  text-align: center;
+  padding: 40rpx;
+  color: #999;
+  font-size: 28rpx;
+}

@@ -192,5 +192,23 @@ App({
       return false;
     }
     return true;
+  },
+
+  // 是否已登录
+  isLogin() {
+    return !!this.globalData.token || !!wx.getStorageSync('token');
+  },
+
+  // 获取当前用户信息
+  getCurrentUser() {
+    return this.globalData.userInfo || wx.getStorageSync('userInfo');
+  },
+
+  // 退出登录
+  logout() {
+    this.globalData.token = null;
+    this.globalData.userInfo = null;
+    wx.removeStorageSync('token');
+    wx.removeStorageSync('userInfo');
   }
 });

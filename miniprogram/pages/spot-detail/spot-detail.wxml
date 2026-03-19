@@ -1,0 +1,93 @@
+<!-- 钓点详情页面 -->
+<view class="container">
+  <!-- 封面图 -->
+  <swiper class="banner" indicator-dots="{{true}}" autoplay="{{false}}">
+    <swiper-item wx:for="{{spot.photos || []}}" wx:key="*this">
+      <image class="banner-img" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+    <swiper-item wx:if="{{!spot.photos || spot.photos.length === 0}}">
+      <image class="banner-img" src="/images/default-spot.png" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 基本信息 -->
+  <view class="info-card card">
+    <view class="title">{{spot.name}}</view>
+    <view class="location">
+      <text class="icon">📍</text>
+      <text>{{spot.province}}{{spot.city}}{{spot.district}}{{spot.address}}</text>
+    </view>
+    <view class="tags">
+      <view class="tag">{{waterTypeMap[spot.water_type]}}</view>
+      <view class="tag">{{spot.fee_status === 1 ? '免费' : '¥' + (spot.fee_amount || 0)}}</view>
+      <view class="tag" wx:for="{{spot.fish_types || []}}" wx:key="*this">🐟 {{item}}</view>
+    </view>
+    <view class="rating">
+      <text class="stars">⭐⭐⭐⭐⭐</text>
+      <text class="score">{{spot.avg_rating || 0}}</text>
+      <text class="count">({{spot.review_count || 0}}条评价)</text>
+    </view>
+  </view>
+
+  <!-- 详细信息 -->
+  <view class="detail-card card">
+    <view class="section-title">钓点信息</view>
+    <view class="detail-row">
+      <text class="label">最佳季节</text>
+      <text class="value">{{(spot.best_seasons || []).join('、')}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">配套设施</text>
+      <text class="value">{{(spot.facilities || []).join('、')}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">访问次数</text>
+      <text class="value">{{spot.visit_count || 0}}</text>
+    </view>
+    <view class="detail-row" wx:if="{{spot.description}}">
+      <text class="label">详细描述</text>
+      <text class="value desc">{{spot.description}}</text>
+    </view>
+  </view>
+
+  <!-- 作钓记录 -->
+  <view class="logs-card card">
+    <view class="section-title">
+      <text>作钓记录</text>
+      <text class="more" bindtap="goLogs">查看更多 ›</text>
+    </view>
+    <view class="log-list">
+      <view class="log-item" wx:for="{{logList}}" wx:key="id" bindtap="goLogDetail" data-id="{{item.id}}">
+        <image class="log-img" src="{{item.photos[0] || '/images/default-log.png'}}" mode="aspectFill" />
+        <view class="log-info">
+          <view class="log-user">
+            <image class="avatar" src="{{item.user.avatar}}" />
+            <text class="name">{{item.user.nickname}}</text>
+          </view>
+          <view class="log-catch">
+            <text wx:if="{{item.max_length}}">🐟 {{item.max_length}}cm</text>
+            <text wx:if="{{item.max_weight}}">⚖️ {{item.max_weight}}g</text>
+          </view>
+          <view class="log-date">{{item.log_date}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{logList.length === 0}}">暂无作钓记录</view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <view class="action-btn" bindtap="goNavigation">
+      <text class="icon">🧭</text>
+      <text>导航</text>
+    </view>
+    <view class="action-btn" bindtap="toggleFavorite">
+      <text class="icon">{{isFavorited ? '⭐' : '☆'}}</text>
+      <text>{{isFavorited ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-btn primary" bindtap="goPublish">
+      <text class="icon">📝</text>
+      <text>发记录</text>
+    </view>
+  </view>
+</view>

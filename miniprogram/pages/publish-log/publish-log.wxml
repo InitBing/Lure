@@ -1,0 +1,133 @@
+<!-- 发布作钓记录页面 -->
+<view class="container">
+  <form bindsubmit="onSubmit">
+    <!-- 钓点选择 -->
+    <view class="form-section card">
+      <view class="section-title">钓点</view>
+      <view class="form-item" bindtap="chooseSpot">
+        <text class="label">钓点名称</text>
+        <view class="input-wrapper">
+          <input class="input" value="{{spotName}}" placeholder="选择或输入钓点" readonly />
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 作钓时间 -->
+    <view class="form-section card">
+      <view class="section-title">作钓时间</view>
+      <view class="form-item" bindtap="chooseDate">
+        <text class="label">日期</text>
+        <view class="input-wrapper">
+          <input class="input" value="{{logDate}}" placeholder="选择日期" readonly />
+          <text class="icon">📅</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 环境信息 -->
+    <view class="form-section card">
+      <view class="section-title">环境信息</view>
+      <view class="form-item">
+        <text class="label">天气</text>
+        <picker mode="selector" range="{{weatherOptions}}" range-key="label" value="{{weatherIndex}}" bindchange="onWeatherChange">
+          <view class="picker">{{weatherOptions[weatherIndex].label}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">气温</text>
+        <input class="input" type="digit" value="{{temperature}}" placeholder="°C" bindinput="onTempInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">水温</text>
+        <input class="input" type="digit" value="{{waterTemp}}" placeholder="°C" bindinput="onWaterTempInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">风力</text>
+        <input class="input" value="{{wind}}" placeholder="如：东南风 2 级" bindinput="onWindInput" />
+      </view>
+    </view>
+
+    <!-- 渔获信息 -->
+    <view class="form-section card">
+      <view class="section-title">
+        <text>渔获</text>
+        <text class="add-btn" bindtap="addCatch">+ 添加</text>
+      </view>
+      <view class="catch-list">
+        <view class="catch-item" wx:for="{{catches}}" wx:key="index">
+          <view class="catch-header">
+            <text class="catch-index">渔获 {{index + 1}}</text>
+            <text class="delete-btn" bindtap="removeCatch" data-index="{{index}}">删除</text>
+          </view>
+          <view class="catch-form">
+            <input class="input" placeholder="鱼种" value="{{item.fish_type}}" bindinput="onCatchFishType" data-index="{{index}}" />
+            <view class="catch-row">
+              <input class="input half" type="digit" placeholder="长度 (cm)" value="{{item.length}}" bindinput="onCatchLength" data-index="{{index}}" />
+              <input class="input half" type="digit" placeholder="重量 (g)" value="{{item.weight}}" bindinput="onCatchWeight" data-index="{{index}}" />
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{catches.length === 0}}">点击"添加"记录你的渔获</view>
+    </view>
+
+    <!-- 装备信息 -->
+    <view class="form-section card">
+      <view class="section-title">使用装备</view>
+      <view class="form-item">
+        <text class="label">竿子</text>
+        <input class="input" value="{{rod}}" placeholder="如：Major Craft Solpara" bindinput="onRodInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">轮子</text>
+        <input class="input" value="{{reel}}" placeholder="如：Shimano SLX" bindinput="onReelInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">拟饵</text>
+        <view class="lure-list">
+          <view class="lure-item" wx:for="{{lures}}" wx:key="index">
+            <input class="lure-input" placeholder="品牌 型号 颜色" value="{{item}}" bindinput="onLureInput" data-index="{{index}}" />
+            <text class="delete-lure" bindtap="removeLure" data-index="{{index}}">×</text>
+          </view>
+          <view class="add-lure" bindtap="addLure">+ 添加拟饵</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 心得描述 -->
+    <view class="form-section card">
+      <view class="section-title">作钓心得</view>
+      <textarea class="textarea" value="{{notes}}" placeholder="分享你的作钓经历、技巧..." maxlength="1000" bindinput="onNotesInput" />
+      <view class="char-count">{{notes.length}}/1000</view>
+    </view>
+
+    <!-- 照片上传 -->
+    <view class="form-section card">
+      <view class="section-title">照片</view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
+          <image class="photo" src="{{item}}" mode="aspectFill" />
+          <text class="delete-photo" bindtap="removePhoto" data-index="{{index}}">×</text>
+        </view>
+        <view class="upload-btn" wx:if="{{photos.length < 9}}" bindtap="uploadPhoto">
+          <text class="icon">+</text>
+          <text class="label">上传照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 公开设置 -->
+    <view class="form-section card">
+      <view class="form-item switch">
+        <text class="label">公开可见</text>
+        <switch checked="{{isPublic}}" bindchange="onSwitchChange" color="#2E7D32" />
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-bar">
+      <button class="submit-btn" formType="submit" loading="{{submitting}}">发布作钓记录</button>
+    </view>
+  </form>
+</view>
