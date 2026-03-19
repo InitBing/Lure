@@ -1,0 +1,105 @@
+/* 视频页面 */
+.container {
+  height: 100vh;
+  background: #f5f5f5;
+}
+
+.video-scroll {
+  height: 100%;
+}
+
+.video-item {
+  display: flex;
+  background: #fff;
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.video-cover-wrapper {
+  position: relative;
+  width: 300rpx;
+  height: 400rpx;
+  flex-shrink: 0;
+}
+
+.video-cover {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0,0,0,0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 40rpx;
+}
+
+.duration {
+  position: absolute;
+  bottom: 10rpx;
+  right: 10rpx;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 4rpx 10rpx;
+  border-radius: 4rpx;
+  font-size: 22rpx;
+}
+
+.video-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.video-title {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.video-meta {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.video-meta .avatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+}
+
+.video-meta .uploader {
+  font-size: 24rpx;
+  color: #666;
+  flex: 1;
+}
+
+.video-meta .play-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.empty, .loading {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #999;
+  font-size: 28rpx;
+}

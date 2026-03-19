@@ -1,0 +1,83 @@
+<!-- 个人主页 -->
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-header">
+    <image class="avatar" src="{{userInfo.avatar}}" />
+    <view class="user-info">
+      <view class="nickname">{{userInfo.nickname}}</view>
+      <view class="region" wx:if="{{userInfo.region}}">📍 {{userInfo.region}}</view>
+      <view class="signature" wx:if="{{userInfo.signature}}">{{userInfo.signature}}</view>
+    </view>
+    <view class="action-btns" wx:if="{{!isMe}}">
+      <view class="follow-btn" wx:if="{{!isFollowing}}" bindtap="toggleFollow">+ 关注</view>
+      <view class="following-btn" wx:else bindtap="toggleFollow">已关注</view>
+    </view>
+  </view>
+
+  <!-- 统计数据 -->
+  <view class="stats">
+    <view class="stat-item">
+      <view class="value">{{stats.log_count || 0}}</view>
+      <view class="label">作钓</view>
+    </view>
+    <view class="stat-item">
+      <view class="value">{{stats.catch_count || 0}}</view>
+      <view class="label">渔获</view>
+    </view>
+    <view class="stat-item">
+      <view class="value">{{stats.follower_count || 0}}</view>
+      <view class="label">粉丝</view>
+    </view>
+    <view class="stat-item">
+      <view class="value">{{stats.following_count || 0}}</view>
+      <view class="label">关注</view>
+    </view>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab-item {{currentTab === 'logs' ? 'active' : ''}}" bindtap="switchTab" data-tab="logs">
+      作钓记录
+    </view>
+    <view class="tab-item {{currentTab === 'items' ? 'active' : ''}}" bindtap="switchTab" data-tab="items">
+      二手商品
+    </view>
+  </view>
+
+  <!-- 内容列表 -->
+  <scroll-view class="content-list" scroll-y bindscrolltolower="loadMore">
+    <!-- 作钓记录 -->
+    <view class="log-grid" wx:if="{{currentTab === 'logs'}}">
+      <view class="log-card" wx:for="{{contentList}}" wx:key="id" bindtap="goLogDetail" data-id="{{item.id}}">
+        <image class="log-img" src="{{item.photos[0] || '/images/default-log.png'}}" mode="aspectFill" />
+        <view class="log-info">
+          <view class="log-catch" wx:if="{{item.max_length}}">🐟 {{item.max_length}}cm</view>
+          <view class="log-date">{{item.log_date}}</view>
+          <view class="log-stats">
+            <text>❤️ {{item.like_count}}</text>
+            <text>💬 {{item.comment_count}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 二手商品 -->
+    <view class="item-grid" wx:if="{{currentTab === 'items'}}">
+      <view class="item-card" wx:for="{{contentList}}" wx:key="id" bindtap="goItemDetail" data-id="{{item.id}}">
+        <image class="item-img" src="{{item.photos[0]}}" mode="aspectFill" />
+        <view class="item-info">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-price">¥{{item.price}}</text>
+          <text class="item-status" wx:if="{{item.status === 2}}">已售</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{contentList.length === 0 && !loading}}">
+      <text>暂无内容</text>
+    </view>
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
+</view>

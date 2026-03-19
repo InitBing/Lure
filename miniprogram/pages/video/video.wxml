@@ -1,0 +1,28 @@
+<!-- 视频页面 -->
+<view class="container">
+  <!-- 视频列表 -->
+  <scroll-view class="video-scroll" scroll-y bindscrolltolower="loadMore">
+    <view class="video-item" wx:for="{{videoList}}" wx:key="id" bindtap="playVideo" data-video="{{item}}">
+      <view class="video-cover-wrapper">
+        <image class="video-cover" src="{{item.cover_url}}" mode="aspectFill" />
+        <view class="play-icon">▶</view>
+        <view class="duration" wx:if="{{item.duration}}">{{formatDuration(item.duration)}}</view>
+      </view>
+      <view class="video-info">
+        <view class="video-title">{{item.title}}</view>
+        <view class="video-meta">
+          <image class="avatar" src="{{item.uploader.avatar}}" />
+          <text class="uploader">{{item.uploader.nickname}}</text>
+          <text class="play-count">▶ {{item.play_count || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="empty" wx:if="{{videoList.length === 0 && !loading}}">
+    <text>暂无视频</text>
+  </view>
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

@@ -1,0 +1,103 @@
+<!-- 发布商品页面 -->
+<view class="container">
+  <form bindsubmit="onSubmit">
+    <!-- 商品分类 -->
+    <view class="form-section card">
+      <view class="section-title">商品分类</view>
+      <view class="category-grid">
+        <view
+          class="category-item {{category === item.value ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="value"
+          bindtap="selectCategory"
+          data-value="{{item.value}}"
+        >
+          <text class="icon">{{item.icon}}</text>
+          <text class="label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 商品信息 -->
+    <view class="form-section card">
+      <view class="section-title">商品信息</view>
+      <view class="form-item">
+        <text class="label">标题</text>
+        <input class="input" value="{{title}}" placeholder="给商品起个标题" maxlength="50" bindinput="onTitleInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">品牌</text>
+        <input class="input" value="{{brand}}" placeholder="如：Shimano" bindinput="onBrandInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">型号</text>
+        <input class="input" value="{{model}}" placeholder="如：SLX DC 70" bindinput="onModelInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">描述</text>
+        <textarea class="textarea" value="{{description}}" placeholder="详细描述商品情况..." maxlength="500" bindinput="onDescInput" />
+        <view class="char-count">{{description.length}}/500</view>
+      </view>
+    </view>
+
+    <!-- 成色和价格 -->
+    <view class="form-section card">
+      <view class="section-title">成色和价格</view>
+      <view class="form-item">
+        <text class="label">成色</text>
+        <picker mode="selector" range="{{conditions}}" value="{{conditionIndex}}" bindchange="onConditionChange">
+          <view class="picker">{{conditions[conditionIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">售价</text>
+        <input class="input" type="digit" value="{{price}}" placeholder="¥" bindinput="onPriceInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">原价</text>
+        <input class="input" type="digit" value="{{originalPrice}}" placeholder="¥ (可选)" bindinput="onOriginalPriceInput" />
+      </view>
+      <view class="form-item">
+        <text class="label">物流</text>
+        <picker mode="selector" range="{{shippingOptions}}" value="{{shippingIndex}}" bindchange="onShippingChange">
+          <view class="picker">{{shippingOptions[shippingIndex]}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 商品照片 -->
+    <view class="form-section card">
+      <view class="section-title">
+        <text>商品照片</text>
+        <text class="count">{{photos.length}}/9</text>
+      </view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
+          <image class="photo" src="{{item}}" mode="aspectFill" />
+          <text class="delete-photo" bindtap="removePhoto" data-index="{{index}}">×</text>
+        </view>
+        <view class="upload-btn" wx:if="{{photos.length < 9}}" bindtap="uploadPhoto">
+          <text class="icon">+</text>
+          <text class="label">添加照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 地区 -->
+    <view class="form-section card">
+      <view class="section-title">所在地区</view>
+      <view class="form-item" bindtap="chooseLocation">
+        <text class="label">地区</text>
+        <view class="input-wrapper">
+          <input class="input" value="{{location}}" placeholder="选择所在地区" readonly />
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-bar">
+      <button class="submit-btn" formType="submit" loading="{{submitting}}">发布商品</button>
+    </view>
+  </form>
+</view>
