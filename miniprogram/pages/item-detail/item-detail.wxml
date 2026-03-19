@@ -1,0 +1,87 @@
+<!-- 二手商品详情页面 -->
+<view class="container">
+  <!-- 商品图片 -->
+  <swiper class="banner" indicator-dots="{{true}}" autoplay="{{false}}">
+    <swiper-item wx:for="{{item.photos || []}}" wx:key="*this">
+      <image class="banner-img" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}" />
+    </swiper-item>
+    <swiper-item wx:if="{{!item.photos || item.photos.length === 0}}">
+      <image class="banner-img" src="/images/default-item.png" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 基本信息 -->
+  <view class="info-card card">
+    <view class="title">{{item.title}}</view>
+    <view class="price-row">
+      <text class="price">¥{{item.price}}</text>
+      <text class="original-price" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+      <text class="condition-tag">{{conditionMap[item.condition]}}</text>
+    </view>
+    <view class="brand" wx:if="{{item.brand}}">{{item.brand}} {{item.model}}</view>
+    <view class="meta">
+      <text class="item">👁️ {{item.view_count || 0}}浏览</text>
+      <text class="item">⭐ {{item.favorite_count || 0}}收藏</text>
+      <text class="item">📅 {{item.created_at}}</text>
+    </view>
+  </view>
+
+  <!-- 卖家信息 -->
+  <view class="seller-card card" bindtap="goSeller">
+    <view class="section-title">卖家信息</view>
+    <view class="seller-info">
+      <image class="avatar" src="{{item.seller.avatar}}" />
+      <view class="seller-detail">
+        <view class="nickname">{{item.seller.nickname}}</view>
+        <view class="stats">
+          <text>成交{{item.seller.trade_count || 0}}单</text>
+          <text>评分{{item.seller.trade_rating || 5.0}}</text>
+        </view>
+      </view>
+      <view class="chat-btn" bindtap="goChat" catchtap="true">聊一聊</view>
+    </view>
+  </view>
+
+  <!-- 商品详情 -->
+  <view class="detail-card card">
+    <view class="section-title">商品详情</view>
+    <view class="detail-row">
+      <text class="label">分类</text>
+      <text class="value">{{categoryMap[item.category]}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">成色</text>
+      <text class="value">{{conditionMap[item.condition]}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">地区</text>
+      <text class="value">{{item.province}}{{item.city}}</text>
+    </view>
+    <view class="detail-row">
+      <text class="label">物流</text>
+      <text class="value">{{item.shipping === 1 ? '包邮' : (item.shipping === 2 ? '不包邮' : '面议')}}</text>
+    </view>
+    <view class="desc" wx:if="{{item.description}}">
+      <text class="label">描述</text>
+      <view class="desc-content">{{item.description}}</view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <view class="action-btn" bindtap="toggleFavorite">
+      <text class="icon">{{isFavorited ? '⭐' : '☆'}}</text>
+      <text class="label">{{isFavorited ? '已收藏' : '收藏'}}</text>
+    </view>
+    <view class="action-btn" bindtap="goChat">
+      <text class="icon">💬</text>
+      <text class="label">联系卖家</text>
+    </view>
+    <view class="action-btn primary" wx:if="{{isOwner}}" bindtap="markSold">
+      <text class="label">标记已售</text>
+    </view>
+    <view class="action-btn primary" wx:else bindtap="goBuy">
+      <text class="label">我想要</text>
+    </view>
+  </view>
+</view>

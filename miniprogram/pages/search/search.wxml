@@ -1,0 +1,173 @@
+<!-- 搜索页面 -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-header">
+    <view class="search-input-wrapper">
+      <text class="icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索钓点、商品、记录..."
+        value="{{keyword}}"
+        bindinput="onInput"
+        confirm-type="search"
+        bindconfirm="onSearch"
+        focus="{{focus}}"
+      />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="clear">✕</text>
+    </view>
+    <view class="cancel-btn" bindtap="goBack">取消</view>
+  </view>
+
+  <!-- 搜索历史 -->
+  <view class="history-section" wx:if="{{!hasSearched && history.length > 0}}">
+    <view class="section-header">
+      <text class="title">搜索历史</text>
+      <text class="clear-history" bindtap="clearHistory">清除</text>
+    </view>
+    <view class="history-list">
+      <view
+        class="history-item"
+        wx:for="{{history}}"
+        wx:key="*this"
+        bindtap="onHistoryClick"
+        data-keyword="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门搜索 -->
+  <view class="hot-section" wx:if="{{!hasSearched}}">
+    <view class="section-header">
+      <text class="title">热门搜索</text>
+    </view>
+    <view class="hot-list">
+      <view
+        class="hot-item"
+        wx:for="{{hotKeywords}}"
+        wx:key="*this"
+        bindtap="onHotClick"
+        data-keyword="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="result-section" wx:if="{{hasSearched}}">
+    <!-- Tab 切换 -->
+    <view class="result-tabs">
+      <view
+        class="tab-item {{currentTab === 'all' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="all"
+      >
+        全部
+      </view>
+      <view
+        class="tab-item {{currentTab === 'spots' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="spots"
+      >
+        钓点
+      </view>
+      <view
+        class="tab-item {{currentTab === 'logs' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="logs"
+      >
+        记录
+      </view>
+      <view
+        class="tab-item {{currentTab === 'items' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="items"
+      >
+        商品
+      </view>
+      <view
+        class="tab-item {{currentTab === 'users' ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-tab="users"
+      >
+        用户
+      </view>
+    </view>
+
+    <!-- 结果列表 -->
+    <scroll-view class="result-list" scroll-y bindscrolltolower="loadMore">
+      <!-- 全部结果 -->
+      <view wx:if="{{currentTab === 'all'}}">
+        <view class="result-group" wx:if="{{results.spots && results.spots.length > 0}}">
+          <view class="group-title">钓点</view>
+          <view class="spot-item" wx:for="{{results.spots}}" wx:key="id" bindtap="goSpot" data-id="{{item.id}}">
+            <text class="name">{{item.name}}</text>
+            <text class="location">📍 {{item.city}}</text>
+          </view>
+        </view>
+        <view class="result-group" wx:if="{{results.logs && results.logs.length > 0}}">
+          <view class="group-title">作钓记录</view>
+          <view class="log-item" wx:for="{{results.logs}}" wx:key="id" bindtap="goLog" data-id="{{item.id}}">
+            <image class="thumb" src="{{item.photos[0]}}" mode="aspectFill" />
+            <view class="log-info">
+              <text class="notes">{{item.notes}}</text>
+              <text class="user">{{item.user.nickname}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="result-group" wx:if="{{results.items && results.items.length > 0}}">
+          <view class="group-title">二手商品</view>
+          <view class="item-grid">
+            <view class="item-card" wx:for="{{results.items}}" wx:key="id" bindtap="goItem" data-id="{{item.id}}">
+              <image class="item-img" src="{{item.photos[0]}}" mode="aspectFill" />
+              <text class="item-title">{{item.title}}</text>
+              <text class="item-price">¥{{item.price}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="result-group" wx:if="{{results.users && results.users.length > 0}}">
+          <view class="group-title">用户</view>
+          <view class="user-item" wx:for="{{results.users}}" wx:key="id" bindtap="goUser" data-id="{{item.id}}">
+            <image class="avatar" src="{{item.avatar}}" />
+            <view class="user-info">
+              <text class="nickname">{{item.nickname}}</text>
+              <text class="region">{{item.region}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 分类结果 -->
+      <view class="result-list-normal" wx:else>
+        <view class="empty" wx:if="{{!results[currentTab] || results[currentTab].length === 0}}">
+          <text>暂无结果</text>
+        </view>
+        <view class="spot-item" wx:if="{{currentTab === 'spots'}}" wx:for="{{results.spots}}" wx:key="id" bindtap="goSpot" data-id="{{item.id}}">
+          <text class="name">{{item.name}}</text>
+          <text class="location">📍 {{item.city}}</text>
+        </view>
+        <view class="log-item" wx:if="{{currentTab === 'logs'}}" wx:for="{{results.logs}}" wx:key="id" bindtap="goLog" data-id="{{item.id}}">
+          <image class="thumb" src="{{item.photos[0]}}" mode="aspectFill" />
+          <view class="log-info">
+            <text class="notes">{{item.notes}}</text>
+            <text class="user">{{item.user.nickname}}</text>
+          </view>
+        </view>
+        <view class="item-card" wx:if="{{currentTab === 'items'}}" wx:for="{{results.items}}" wx:key="id" bindtap="goItem" data-id="{{item.id}}">
+          <image class="item-img" src="{{item.photos[0]}}" mode="aspectFill" />
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-price">¥{{item.price}}</text>
+        </view>
+        <view class="user-item" wx:if="{{currentTab === 'users'}}" wx:for="{{results.users}}" wx:key="id" bindtap="goUser" data-id="{{item.id}}">
+          <image class="avatar" src="{{item.avatar}}" />
+          <view class="user-info">
+            <text class="nickname">{{item.nickname}}</text>
+            <text class="region">{{item.region}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

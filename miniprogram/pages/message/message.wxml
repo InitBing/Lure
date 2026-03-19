@@ -1,0 +1,80 @@
+<!-- 消息页面 -->
+<view class="container">
+  <!-- 会话列表 -->
+  <view class="conversation-section" wx:if="{{!currentConversation}}">
+    <view class="section-header">
+      <text class="title">私信</text>
+    </view>
+    <view class="conversation-list">
+      <view
+        class="conversation-item"
+        wx:for="{{conversations}}"
+        wx:key="conversation_id"
+        bindtap="enterConversation"
+        data-conversation="{{item}}"
+      >
+        <image class="avatar" src="{{item.partner.avatar}}" />
+        <view class="conversation-info">
+          <view class="conversation-header">
+            <text class="nickname">{{item.partner.nickname}}</text>
+            <text class="time">{{item.last_time}}</text>
+          </view>
+          <view class="last-message">
+            <text class="message-text">{{item.last_message}}</text>
+            <view class="badge" wx:if="{{item.unread_count > 0}}">{{item.unread_count}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{conversations.length === 0}}">
+      <text>暂无消息</text>
+    </view>
+  </view>
+
+  <!-- 聊天界面 -->
+  <view class="chat-section" wx:if="{{currentConversation}}">
+    <!-- 聊天头部 -->
+    <view class="chat-header">
+      <view class="back-btn" bindtap="backToConversations">
+        <text>‹ 返回</text>
+      </view>
+      <text class="partner-name">{{currentConversation.partner.nickname}}</text>
+      <view class="more-btn">⋮</view>
+    </view>
+
+    <!-- 消息列表 -->
+    <scroll-view
+      class="message-list"
+      scroll-y
+      scroll-into-view="{{scrollToView}}"
+      scroll-with-animation="true"
+    >
+      <view
+        class="message-item {{message.sender_id === userId ? 'self' : 'partner'}}"
+        wx:for="{{messages}}"
+        wx:key="id"
+        id="msg-{{item.id}}"
+      >
+        <image class="avatar" src="{{message.sender_id === userId ? userInfo.avatar : currentConversation.partner.avatar}}" />
+        <view class="message-content">
+          <text class="message-text">{{item.content}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 输入框 -->
+    <view class="input-bar">
+      <input
+        class="message-input"
+        placeholder="发消息..."
+        value="{{inputText}}"
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="onSend"
+      />
+      <view class="send-btn" bindtap="onSend" wx:if="{{inputText}}">发送</view>
+      <text class="icon-btn" wx:else>📷</text>
+      <text class="icon-btn">+</text>
+    </view>
+  </view>
+</view>
