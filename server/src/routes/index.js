@@ -17,6 +17,7 @@ const articleController = require('../controllers/article');
 const messageController = require('../controllers/message');
 const commentController = require('../controllers/comment');
 const adminController = require('../controllers/admin');
+const pondController = require('../controllers/pond');
 
 // 导入中间件
 const { requireAuth } = require('../middleware/auth');
@@ -108,6 +109,20 @@ router.put('/admin/spots/:id/audit', requireAdmin, adminController.auditSpot);
 // 内容管理
 router.get('/admin/contents', requireAdmin, adminController.contentList);
 router.delete('/admin/contents/:type/:id', requireAdmin, adminController.deleteContent);
+
+// 黑坑管理路由
+router.post('/pond/owner/apply', requireAuth(), pondController.applyOwner);
+router.get('/pond/owner/info', requireAuth(), pondController.getOwnerInfo);
+router.post('/pond/ponds', requireAuth(), pondController.createPond);
+router.get('/pond/ponds', pondController.pondList);
+router.get('/pond/ponds/:id', pondController.getPond);
+router.post('/pond/events', requireAuth(), pondController.createEvent);
+router.get('/pond/events', pondController.eventList);
+router.get('/pond/events/:id', pondController.getEvent);
+router.post('/pond/events/:id/join', requireAuth(), pondController.joinEvent);
+router.get('/pond/participants', requireAuth(), pondController.myParticipants);
+router.post('/pond/participants/:id/pay', requireAuth(), pondController.payParticipant);
+router.post('/pond/ponds/:id/review', requireAuth(), pondController.createReview);
 
 // 搜索路由
 router.get('/search', async (ctx) => {

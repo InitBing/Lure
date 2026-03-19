@@ -1,0 +1,53 @@
+<!-- 黑坑列表页面 -->
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="goSearch">
+      <text class="icon">🔍</text>
+      <text class="placeholder">搜索黑坑钓场</text>
+    </view>
+    <view class="apply-btn" wx:if="{{!isOwner}}" bindtap="goApply">
+      <text>塘主入驻</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="filters">
+    <view class="filter-item {{filters.city ? '' : 'active'}}" bindtap="selectCity">
+      {{filters.city || '全部城市'}}
+    </view>
+    <view class="filter-item {{filters.type ? '' : 'active'}}" bindtap="selectType">
+      {{filters.type || '钓场类型'}}
+    </view>
+  </view>
+
+  <!-- 钓场列表 -->
+  <view class="pond-list">
+    <view class="pond-card" wx:for="{{pondList}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="cover" src="{{item.cover_url || '/images/default-pond.png'}}" mode="aspectFill" />
+      <view class="pond-info">
+        <view class="pond-name">{{item.name}}</view>
+        <view class="pond-address">📍 {{item.province}}{{item.city}}{{item.district}}</view>
+        <view class="pond-tags">
+          <text class="tag" wx:if="{{item.water_type === 1}}">池塘</text>
+          <text class="tag" wx:for="{{item.fish_types || []}}" wx:key="*this">🐟 {{item}}</text>
+        </view>
+        <view class="pond-meta">
+          <text>⭐ {{item.avg_rating || 0}}</text>
+          <text>🎯 {{item.event_count || 0}}场活动</text>
+          <text>👁️ {{item.view_count || 0}}</text>
+        </view>
+      </view>
+      <view class="event-count" wx:if="{{item.upcoming_events && item.upcoming_events.length > 0}}">
+        <text class="badge">{{item.upcoming_events.length}}场进行中</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="no-more" wx:if="{{!hasMore && pondList.length > 0}}">没有更多了</view>
+  <view class="empty" wx:if="{{pondList.length === 0 && !loading}}">
+    <text>暂无黑坑钓场</text>
+  </view>
+</view>

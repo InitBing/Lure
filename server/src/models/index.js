@@ -16,6 +16,10 @@ const Comment = require('./Comment');
 const Favorite = require('./Favorite');
 const Like = require('./Like');
 const Follow = require('./Follow');
+const PondOwner = require('./PondOwner');
+const Pond = require('./Pond');
+const PondEvent = require('./PondEvent');
+const EventParticipant = require('./EventParticipant');
 
 // 用户关联
 User.hasMany(Spot, { foreignKey: 'created_by', as: 'createdSpots' });
@@ -78,6 +82,25 @@ Article.hasMany(Favorite, { foreignKey: 'target_id', as: 'favorites' });
 Comment.hasMany(Comment, { foreignKey: 'parent_id', as: 'replies' });
 Comment.belongsTo(Comment, { foreignKey: 'parent_id', as: 'parent' });
 
+// 黑坑关联
+PondOwner.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasOne(PondOwner, { foreignKey: 'user_id', as: 'pondOwner' });
+
+Pond.belongsTo(PondOwner, { foreignKey: 'owner_id', as: 'owner' });
+PondOwner.hasMany(Pond, { foreignKey: 'owner_id', as: 'ponds' });
+
+PondEvent.belongsTo(Pond, { foreignKey: 'pond_id', as: 'pond' });
+Pond.hasMany(PondEvent, { foreignKey: 'pond_id', as: 'events' });
+
+PondEvent.belongsTo(PondOwner, { foreignKey: 'owner_id', as: 'owner' });
+PondOwner.hasMany(PondEvent, { foreignKey: 'owner_id', as: 'events' });
+
+EventParticipant.belongsTo(PondEvent, { foreignKey: 'event_id', as: 'event' });
+PondEvent.hasMany(EventParticipant, { foreignKey: 'event_id', as: 'participants' });
+
+EventParticipant.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(EventParticipant, { foreignKey: 'user_id', as: 'eventParticipants' });
+
 module.exports = {
   sequelize,
   Op,
@@ -91,5 +114,9 @@ module.exports = {
   Comment,
   Favorite,
   Like,
-  Follow
+  Follow,
+  PondOwner,
+  Pond,
+  PondEvent,
+  EventParticipant
 };
