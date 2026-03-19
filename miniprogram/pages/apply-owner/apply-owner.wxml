@@ -1,0 +1,82 @@
+<!-- 塘主入驻申请页面 -->
+<view class="container">
+  <view class="header-card card">
+    <view class="header-title">🏪 塘主入驻申请</view>
+    <view class="header-desc">成为认证塘主，发布钓场和活动，吸引更多钓友</view>
+  </view>
+
+  <form bindsubmit="onSubmit">
+    <!-- 基本信息 -->
+    <view class="form-section card">
+      <view class="section-title">基本信息</view>
+      <view class="form-item">
+        <text class="label">钓场名称 <text class="required">*</text></text>
+        <input class="input" name="business_name" value="{{form.business_name}}" placeholder="请输入钓场名称" maxlength="50" />
+      </view>
+      <view class="form-item">
+        <text class="label">联系人 <text class="required">*</text></text>
+        <input class="input" name="contact_name" value="{{form.contact_name}}" placeholder="请输入联系人姓名" maxlength="20" />
+      </view>
+      <view class="form-item">
+        <text class="label">联系电话 <text class="required">*</text></text>
+        <input class="input" name="contact_phone" type="number" value="{{form.contact_phone}}" placeholder="请输入联系电话" maxlength="11" />
+      </view>
+      <view class="form-item">
+        <text class="label">联系微信</text>
+        <input class="input" name="contact_wechat" value="{{form.contact_wechat}}" placeholder="请输入微信号" maxlength="50" />
+      </view>
+    </view>
+
+    <!-- 资质证明 -->
+    <view class="form-section card">
+      <view class="section-title">资质证明</view>
+      <view class="form-item">
+        <text class="label">营业执照</text>
+        <view class="upload-area" bindtap="uploadLicense">
+          <view class="upload-box" wx:if="{{!form.business_license}}">
+            <text class="icon">+</text>
+            <text class="label">上传营业执照</text>
+          </view>
+          <image class="license-img" wx:else src="{{form.business_license}}" mode="aspectFit" />
+        </view>
+      </view>
+      <view class="tips">
+        <text class="tip-icon">ℹ️</text>
+        <text class="tip-text">营业执照可选，有证优先审核通过</text>
+      </view>
+    </view>
+
+    <!-- 钓场信息 -->
+    <view class="form-section card">
+      <view class="section-title">钓场信息</view>
+      <view class="form-item">
+        <text class="label">钓场地址</text>
+        <view class="location-input" bindtap="chooseLocation">
+          <input class="input" value="{{location.address}}" placeholder="点击选择钓场位置" readonly />
+          <text class="icon">📍</text>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="label">水域类型</text>
+        <picker mode="selector" range="{{waterTypes}}" value="{{waterTypeIndex}}" bindchange="onWaterTypeChange">
+          <view class="picker">{{waterTypes[waterTypeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="form-item">
+        <text class="label">钓场面积</text>
+        <input class="input" type="digit" value="{{form.total_area}}" placeholder="亩" />
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button class="submit-btn" formType="submit" loading="{{submitting}}">
+        提交申请
+      </button>
+      <view class="tips">
+        <text class="tip-icon">⏱️</text>
+        <text class="tip-text">审核时间：1-3 个工作日</text>
+      </view>
+    </view>
+  </form>
+</view>
