@@ -18,6 +18,7 @@ const messageController = require('../controllers/message');
 const commentController = require('../controllers/comment');
 const adminController = require('../controllers/admin');
 const pondController = require('../controllers/pond');
+const adminPondController = require('../controllers/adminPond');
 
 // 导入中间件
 const { requireAuth } = require('../middleware/auth');
@@ -105,6 +106,16 @@ router.put('/admin/users/:id/status', requireAdmin, adminController.updateUserSt
 // 钓点管理
 router.get('/admin/spots', requireAdmin, adminController.spotList);
 router.put('/admin/spots/:id/audit', requireAdmin, adminController.auditSpot);
+
+// 黑坑管理
+router.get('/admin/pond-owners', requireAdmin, adminPondController.ownerList);
+router.put('/admin/pond-owners/:id/audit', requireAdmin, adminPondController.auditOwner);
+router.put('/admin/pond-owners/:id/status', requireAdmin, adminPondController.updateOwnerStatus);
+router.get('/admin/ponds', requireAdmin, adminPondController.pondList);
+router.put('/admin/ponds/:id/status', requireAdmin, adminPondController.updatePondStatus);
+router.get('/admin/pond-events', requireAdmin, adminPondController.eventList);
+router.put('/admin/pond-events/:id/cancel', requireAdmin, adminPondController.cancelEvent);
+router.get('/admin/event-participants', requireAdmin, adminPondController.participantList);
 
 // 内容管理
 router.get('/admin/contents', requireAdmin, adminController.contentList);
