@@ -1,0 +1,80 @@
+<!-- 报名缴费页面 -->
+<view class="container">
+  <view class="card">
+    <view class="section-title">报名信息</view>
+    <view class="form-item">
+      <text class="label">活动名称</text>
+      <text class="value">{{event.title}}</text>
+    </view>
+    <view class="form-item">
+      <text class="label">活动时间</text>
+      <text class="value">{{event.event_date}} {{event.start_time}}</text>
+    </view>
+    <view class="form-item">
+      <text class="label">钓场</text>
+      <text class="value">{{event.pond.name}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">费用明细</view>
+    <view class="fee-item">
+      <text class="fee-label">报名费</text>
+      <text class="fee-value">¥{{participant.fee_amount}}</text>
+    </view>
+    <view class="fee-item" wx:if="{{participant.deposit_amount > 0}}">
+      <text class="fee-label">押金</text>
+      <text class="fee-value">¥{{participant.deposit_amount}}</text>
+    </view>
+    <view class="fee-total">
+      <text class="total-label">合计</text>
+      <text class="total-amount">¥{{totalAmount}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">报名信息</view>
+    <view class="form-item">
+      <text class="label">竿数</text>
+      <picker mode="selector" range="{{rodOptions}}" value="{{rodIndex}}" bindchange="onRodChange">
+        <view class="picker">{{rodOptions[rodIndex]}}</view>
+      </picker>
+    </view>
+    <view class="form-item">
+      <text class="label">备注</text>
+      <textarea class="textarea" value="{{remarks}}" placeholder="如有特殊需求请备注" maxlength="200" bindinput="onRemarksInput" />
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">支付方式</view>
+    <view class="payment-methods">
+      <view class="payment-item {{paymentMethod === 1 ? 'active' : ''}}" bindtap="selectPayment" data-method="1">
+        <text class="icon">💳</text>
+        <text class="label">微信支付</text>
+        <text class="check" wx:if="{{paymentMethod === 1}}">✓</text>
+      </view>
+      <view class="payment-item {{paymentMethod === 2 ? 'active' : ''}}" bindtap="selectPayment" data-method="2">
+        <text class="icon">🔶</text>
+        <text class="label">支付宝</text>
+        <text class="check" wx:if="{{paymentMethod === 2}}">✓</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="tips-card card">
+    <view class="section-title">报名须知</view>
+    <view class="tips-list">
+      <text class="tips-item">1. 请提前到达钓场签到</text>
+      <text class="tips-item">2. 遵守钓场规则，文明钓鱼</text>
+      <text class="tips-item">3. 活动开始前 24 小时可退款</text>
+      <text class="tips-item">4. 如有问题请联系塘主</text>
+    </view>
+  </view>
+
+  <view class="action-bar">
+    <button class="pay-btn" bindtap="confirmPay" loading="{{paying}}">
+      确认支付 ¥{{totalAmount}}
+    </button>
+  </view>
+</view>

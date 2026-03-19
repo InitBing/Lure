@@ -1,0 +1,174 @@
+/* 报名缴费页面 */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+  background: #f5f5f5;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.form-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-item .label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.form-item .value {
+  font-size: 28rpx;
+  color: #333;
+  max-width: 400rpx;
+  text-align: right;
+}
+
+.form-item .picker {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.textarea {
+  width: 100%;
+  height: 150rpx;
+  font-size: 28rpx;
+}
+
+.fee-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.fee-item:last-child {
+  border-bottom: none;
+}
+
+.fee-item .fee-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.fee-item .fee-value {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.fee-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20rpx;
+  margin-top: 10rpx;
+  border-top: 2rpx solid #f0f0f0;
+}
+
+.fee-total .total-label {
+  font-size: 30rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.fee-total .total-amount {
+  font-size: 40rpx;
+  color: #ff5252;
+  font-weight: bold;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+}
+
+.payment-item.active {
+  border-color: #2E7D32;
+  background: #e8f5e9;
+}
+
+.payment-item .icon {
+  font-size: 40rpx;
+  margin-right: 16rpx;
+}
+
+.payment-item .label {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.payment-item .check {
+  font-size: 36rpx;
+  color: #2E7D32;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.tips-item {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.pay-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pay-btn:active {
+  opacity: 0.8;
+}

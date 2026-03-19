@@ -1,0 +1,109 @@
+<!-- 活动详情页 -->
+<view class="container">
+  <!-- 封面图 -->
+  <view class="cover-wrapper">
+    <image class="cover" src="{{event.cover_url || '/images/default-event.png'}}" mode="aspectFill" />
+    <view class="event-type">{{eventTypeMap[event.event_type]}}</view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="info-card card">
+    <view class="event-title">{{event.title}}</view>
+    <view class="event-status">
+      <text class="status-tag {{event.status === 0 ? 'active' : ''}}">
+        {{event.status === 0 ? '报名中' : event.status === 1 ? '已满员' : event.status === 2 ? '进行中' : '已结束'}}
+      </text>
+      <text class="time">{{event.event_date}} {{event.start_time}}-{{event.end_time}}</text>
+    </view>
+  </view>
+
+  <!-- 费用信息 -->
+  <view class="fee-card card">
+    <view class="fee-row">
+      <text class="fee-label">报名费</text>
+      <text class="fee-amount">¥{{event.fee_amount}}</text>
+    </view>
+    <view class="fee-row" wx:if="{{event.deposit_amount > 0}}">
+      <text class="fee-label">押金</text>
+      <text class="fee-amount">¥{{event.deposit_amount}}</text>
+    </view>
+    <view class="fee-row" wx:if="{{event.prize_pool > 0}}">
+      <text class="fee-label">总奖金</text>
+      <text class="fee-amount prize">¥{{event.prize_pool}}</text>
+    </view>
+  </view>
+
+  <!-- 钓场信息 -->
+  <view class="pond-card card" bindtap="goPond">
+    <view class="section-title">钓场信息</view>
+    <view class="pond-info">
+      <text class="pond-name">{{event.pond.name}}</text>
+      <text class="pond-address">📍 {{event.pond.address}}</text>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+
+  <!-- 活动详情 -->
+  <view class="detail-card card">
+    <view class="section-title">活动详情</view>
+    <view class="detail-content">{{event.description}}</view>
+  </view>
+
+  <!-- 活动规则 -->
+  <view class="rules-card card">
+    <view class="section-title">活动规则</view>
+    <view class="rule-item">
+      <text class="rule-label">🎣 允许竿数</text>
+      <text class="rule-value">{{event.allowed_rods}}根</text>
+    </view>
+    <view class="rule-item" wx:if="{{event.max_rod_length}}">
+      <text class="rule-label">📏 最大竿长</text>
+      <text class="rule-value">{{event.max_rod_length}}米</text>
+    </view>
+    <view class="rule-item" wx:if="{{event.fish_weight_rule}}">
+      <text class="rule-label">⚖️ 计重方式</text>
+      <text class="rule-value">{{fishWeightRuleMap[event.fish_weight_rule]}}</text>
+    </view>
+    <view class="rule-item" wx:if="{{event.other_rules}}">
+      <text class="rule-label">📋 其他规则</text>
+    </view>
+    <view class="rule-content" wx:if="{{event.other_rules}}">{{event.other_rules}}</view>
+  </view>
+
+  <!-- 提供物品 -->
+  <view class="provided-card card" wx:if="{{event.provided_items && event.provided_items.length > 0}}">
+    <view class="section-title">钓场提供</view>
+    <view class="provided-list">
+      <text class="provided-item" wx:for="{{event.provided_items}}" wx:key="*this">
+        ✅ {{item}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 报名人数 -->
+  <view class="participants-card card">
+    <view class="section-title">报名情况</view>
+    <view class="progress-bar">
+      <view class="progress" style="width: {{(event.current_participants / (event.max_participants || 1)) * 100}}%"></view>
+    </view>
+    <view class="participants-info">
+      <text>已报名 {{event.current_participants}} 人</text>
+      <text wx:if="{{event.max_participants}}">/ 限 {{event.max_participants}} 人</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar" wx:if="{{event.status === 0}}">
+    <view class="action-btn" bindtap="contactOwner">
+      <text class="icon">💬</text>
+      <text>咨询</text>
+    </view>
+    <view class="action-btn primary" bindtap="joinEvent">
+      <text class="label">立即报名</text>
+      <text class="price">¥{{event.fee_amount}}</text>
+    </view>
+  </view>
+  <view class="action-bar ended" wx:else>
+    <text class="ended-text">{{event.status === 1 ? '已满员' : '活动已结束'}}</text>
+  </view>
+</view>

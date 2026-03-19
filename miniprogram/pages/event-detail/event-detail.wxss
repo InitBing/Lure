@@ -1,0 +1,250 @@
+/* 活动详情页 */
+.container {
+  padding-bottom: 120rpx;
+  background: #f5f5f5;
+}
+
+.cover-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400rpx;
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+}
+
+.event-type {
+  position: absolute;
+  top: 20rpx;
+  left: 20rpx;
+  padding: 8rpx 20rpx;
+  background: rgba(102, 126, 234, 0.9);
+  color: #fff;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+}
+
+.card {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+
+.info-card .event-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.info-card .event-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-tag {
+  padding: 6rpx 16rpx;
+  background: #e0e0e0;
+  color: #666;
+  border-radius: 4rpx;
+  font-size: 24rpx;
+}
+
+.status-tag.active {
+  background: #e8f5e9;
+  color: #2E7D32;
+}
+
+.info-card .time {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.fee-card .fee-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.fee-card .fee-row:last-child {
+  border-bottom: none;
+}
+
+.fee-card .fee-label {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.fee-card .fee-amount {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+}
+
+.fee-card .fee-amount.prize {
+  color: #ff9800;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.pond-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pond-info {
+  flex: 1;
+}
+
+.pond-info .pond-name {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.pond-info .pond-address {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: #ccc;
+}
+
+.detail-content {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.rule-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+}
+
+.rule-label {
+  color: #666;
+}
+
+.rule-value {
+  color: #333;
+  font-weight: bold;
+}
+
+.rule-content {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin-top: 10rpx;
+}
+
+.provided-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.provided-item {
+  padding: 12rpx 20rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.participants-card .progress-bar {
+  height: 20rpx;
+  background: #f0f0f0;
+  border-radius: 10rpx;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.participants-card .progress {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10rpx;
+}
+
+.participants-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  padding: 20rpx 30rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 8rpx rgba(0,0,0,0.05);
+  gap: 20rpx;
+}
+
+.action-bar.ended {
+  justify-content: center;
+}
+
+.ended-text {
+  font-size: 30rpx;
+  color: #999;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.action-btn .icon {
+  font-size: 36rpx;
+  margin-bottom: 4rpx;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20rpx;
+}
+
+.action-btn.primary .label {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.action-btn.primary .price {
+  font-size: 32rpx;
+  font-weight: bold;
+}

@@ -1,0 +1,123 @@
+<!-- 黑坑详情页 -->
+<view class="container">
+  <!-- 封面轮播 -->
+  <swiper class="banner" indicator-dots="{{true}}" autoplay="{{false}}">
+    <swiper-item wx:for="{{pond.photos || []}}" wx:key="*this">
+      <image class="banner-img" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+    <swiper-item wx:if="{{!pond.photos || pond.photos.length === 0}}">
+      <image class="banner-img" src="/images/default-pond.png" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 基本信息 -->
+  <view class="info-card card">
+    <view class="pond-name">{{pond.name}}</view>
+    <view class="pond-address">
+      <text class="icon">📍</text>
+      <text>{{pond.province}}{{pond.city}}{{pond.district}}{{pond.address}}</text>
+    </view>
+    <view class="pond-tags">
+      <text class="tag" wx:if="{{pond.water_type === 1}}">池塘</text>
+      <text class="tag" wx:if="{{pond.water_type === 2}}">水库</text>
+      <text class="tag" wx:if="{{pond.water_type === 3}}">湖泊</text>
+      <text class="tag" wx:if="{{pond.total_area}}">{{pond.total_area}}亩</text>
+      <text class="tag" wx:if="{{pond.fish_depth}}">水深{{pond.fish_depth}}m</text>
+    </view>
+    <view class="rating">
+      <text class="stars">⭐⭐⭐⭐⭐</text>
+      <text class="score">{{pond.avg_rating || 0}}</text>
+      <text class="count">({{pond.review_count || 0}}条评价)</text>
+    </view>
+  </view>
+
+  <!-- 塘主信息 -->
+  <view class="owner-card card" bindtap="goOwner">
+    <view class="section-title">塘主信息</view>
+    <view class="owner-info">
+      <image class="avatar" src="{{pond.owner.user.avatar}}" />
+      <view class="owner-detail">
+        <view class="owner-name">{{pond.owner.business_name}}</view>
+        <view class="owner-stats">
+          <text>钓场：{{pond.owner.pond_count}}</text>
+          <text>活动：{{pond.owner.event_count}}</text>
+          <text>信用：{{pond.owner.credit_score}}</text>
+        </view>
+      </view>
+      <view class="contact-btn" bindtap="contactOwner" catchtap="true">联系</view>
+    </view>
+  </view>
+
+  <!-- 钓场设施 -->
+  <view class="facilities-card card" wx:if="{{pond.facilities || pond.services}}">
+    <view class="section-title">设施服务</view>
+    <view class="facility-list">
+      <text class="facility-item" wx:for="{{pond.facilities || []}}" wx:key="*this">
+        ✅ {{item}}
+      </text>
+      <text class="facility-item" wx:for="{{pond.services || []}}" wx:key="*this">
+        🎁 {{item}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 鱼种信息 -->
+  <view class="fish-card card" wx:if="{{pond.fish_types && pond.fish_types.length > 0}}">
+    <view class="section-title">放钓鱼种</view>
+    <view class="fish-list">
+      <text class="fish-item" wx:for="{{pond.fish_types}}" wx:key="*this">
+        🐟 {{item}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 钓场规则 -->
+  <view class="rules-card card" wx:if="{{pond.rules}}">
+    <view class="section-title">钓场规则</view>
+    <view class="rules-content">{{pond.rules}}</view>
+  </view>
+
+  <!-- 近期活动 -->
+  <view class="events-card card">
+    <view class="section-title">
+      <text>近期活动</text>
+      <text class="more" bindtap="goAllEvents">查看全部 ›</text>
+    </view>
+    <view class="event-list">
+      <view class="event-item" wx:for="{{events}}" wx:key="id" bindtap="goEvent" data-id="{{item.id}}">
+        <view class="event-header">
+          <text class="event-type">{{eventTypeMap[item.event_type]}}</text>
+          <text class="event-status {{item.status === 0 ? 'active' : ''}}">
+            {{item.status === 0 ? '报名中' : item.status === 1 ? '已满员' : '已结束'}}
+          </text>
+        </view>
+        <view class="event-title">{{item.title}}</view>
+        <view class="event-info">
+          <text>📅 {{item.event_date}} {{item.start_time}}</text>
+          <text>💰 ¥{{item.fee_amount}}</text>
+        </view>
+        <view class="event-participants">
+          <text>👥 {{item.current_participants}}/{{item.max_participants || '?'}}人</text>
+          <text class="prize" wx:if="{{item.prize_pool}}">🏆 奖金{{item.prize_pool}}元</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{events.length === 0}}">暂无活动</view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="action-bar">
+    <view class="action-btn" bindtap="toggleFavorite">
+      <text class="icon">{{isFavorited ? '⭐' : '☆'}}</text>
+      <text>收藏</text>
+    </view>
+    <view class="action-btn" bindtap="goNavigation">
+      <text class="icon">🧭</text>
+      <text>导航</text>
+    </view>
+    <view class="action-btn primary" bindtap="goEvents">
+      <text class="icon">🎣</text>
+      <text>报名活动</text>
+    </view>
+  </view>
+</view>
