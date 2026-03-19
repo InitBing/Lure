@@ -39,32 +39,32 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "images/tab/home.png",
-        "selectedIconPath": "images/tab/home-active.png"
+        "iconPath": "images/tab/home.svg",
+        "selectedIconPath": "images/tab/home-active.svg"
       },
       {
         "pagePath": "pages/spots/spots",
         "text": "钓点",
-        "iconPath": "images/tab/spot.png",
-        "selectedIconPath": "images/tab/spot-active.png"
+        "iconPath": "images/tab/spot.svg",
+        "selectedIconPath": "images/tab/spot-active.svg"
       },
       {
         "pagePath": "pages/publish/publish",
         "text": "发布",
-        "iconPath": "images/tab/publish.png",
-        "selectedIconPath": "images/tab/publish-active.png"
+        "iconPath": "images/tab/publish.svg",
+        "selectedIconPath": "images/tab/publish-active.svg"
       },
       {
         "pagePath": "pages/market/market",
         "text": "市场",
-        "iconPath": "images/tab/market.png",
-        "selectedIconPath": "images/tab/market-active.png"
+        "iconPath": "images/tab/market.svg",
+        "selectedIconPath": "images/tab/market-active.svg"
       },
       {
         "pagePath": "pages/mine/mine",
         "text": "我的",
-        "iconPath": "images/tab/mine.png",
-        "selectedIconPath": "images/tab/mine-active.png"
+        "iconPath": "images/tab/mine.svg",
+        "selectedIconPath": "images/tab/mine-active.svg"
       }
     ]
   },
