@@ -16,9 +16,11 @@ const videoController = require('../controllers/video');
 const articleController = require('../controllers/article');
 const messageController = require('../controllers/message');
 const commentController = require('../controllers/comment');
+const adminController = require('../controllers/admin');
 
 // 导入中间件
 const { requireAuth } = require('../middleware/auth');
+const { requireAdmin, requireRole } = require('../middleware/adminAuth');
 
 // 健康检查
 router.get('/health', async (ctx) => {
@@ -89,6 +91,23 @@ router.get('/comments', commentController.list);
 router.post('/comments', requireAuth(), commentController.create);
 router.delete('/comments/:id', requireAuth(), commentController.remove);
 router.post('/comments/:id/like', requireAuth(), commentController.like);
+
+// 管理后台路由
+router.post('/admin/login', adminController.login);
+router.get('/admin/profile', requireAdmin, adminController.getProfile);
+router.get('/admin/stats', requireAdmin, adminController.getStats);
+
+// 用户管理
+router.get('/admin/users', requireAdmin, adminController.userList);
+router.put('/admin/users/:id/status', requireAdmin, adminController.updateUserStatus);
+
+// 钓点管理
+router.get('/admin/spots', requireAdmin, adminController.spotList);
+router.put('/admin/spots/:id/audit', requireAdmin, adminController.auditSpot);
+
+// 内容管理
+router.get('/admin/contents', requireAdmin, adminController.contentList);
+router.delete('/admin/contents/:type/:id', requireAdmin, adminController.deleteContent);
 
 // 搜索路由
 router.get('/search', async (ctx) => {
