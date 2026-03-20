@@ -2,11 +2,18 @@
 -- MySQL 8.0+
 -- 执行：mysql -u root -p < init.sql
 
+-- 如果数据库已存在则删除（生产环境请谨慎使用）
+-- DROP DATABASE IF EXISTS lurebin;
+
 CREATE DATABASE IF NOT EXISTS lurebin DEFAULT CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE lurebin;
 
+-- ============================================
+-- 基础表（无外键依赖）
+-- ============================================
+
 -- 用户表
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     openid VARCHAR(64) NOT NULL UNIQUE COMMENT '微信 openid',
     unionid VARCHAR(64) DEFAULT NULL COMMENT '微信 unionid (多应用统一)',
@@ -33,8 +40,39 @@ CREATE TABLE users (
     INDEX idx_credit (credit_score)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
+-- 资讯表（独立内容表）
+CREATE TABLE IF NOT EXISTS articles (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL COMMENT '标题',
+    summary VARCHAR(500) DEFAULT NULL COMMENT '摘要',
+    content TEXT DEFAULT NULL COMMENT '内容',
+    cover_url VARCHAR(255) DEFAULT NULL COMMENT '封面图',
+    source_name VARCHAR(100) NOT NULL COMMENT '来源名称',
+    source_url VARCHAR(500) DEFAULT NULL COMMENT '原文链接',
+    author VARCHAR(100) DEFAULT NULL COMMENT '作者',
+    category TINYINT DEFAULT 1 COMMENT '分类 1-新闻 2-赛事 3-评测 4-教学 5-新品',
+    tags JSON DEFAULT NULL COMMENT '标签',
+    view_count INT DEFAULT 0 COMMENT '阅读数',
+    favorite_count INT DEFAULT 0 COMMENT '收藏数',
+    crawl_source VARCHAR(50) DEFAULT NULL COMMENT '抓取来源标识',
+    crawl_time TIMESTAMP DEFAULT NULL COMMENT '抓取时间',
+    status TINYINT DEFAULT 1 COMMENT '状态 1-已发布 0-隐藏',
+    is_recommend TINYINT DEFAULT 0 COMMENT '是否推荐',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    published_at TIMESTAMP DEFAULT NULL COMMENT '发布时间',
+    INDEX idx_category (category),
+    INDEX idx_status (status),
+    INDEX idx_recommend (is_recommend),
+    INDEX idx_published (published_at DESC),
+    INDEX idx_crawl_time (crawl_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资讯表';
+
+-- ============================================
+-- 依赖用户表的表
+-- ============================================
+
 -- 钓点表
-CREATE TABLE spots (
+CREATE TABLE IF NOT EXISTS spots (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL COMMENT '钓点名称',
     description TEXT DEFAULT NULL COMMENT '详细描述',
@@ -52,7 +90,7 @@ CREATE TABLE spots (
     facilities JSON DEFAULT NULL COMMENT '设施',
     visit_count INT DEFAULT 0 COMMENT '访问次数',
     log_count INT DEFAULT 0 COMMENT '作钓记录数',
-    avg_rating DECIMAL(2,1) DEFAULT 0 COMMENT '平均评分',
+    avg_rating DECIMAL(2,1) DEFAULT 0.0 COMMENT '平均评分',
     review_count INT DEFAULT 0 COMMENT '评价数',
     status TINYINT DEFAULT 0 COMMENT '状态 0-待审核 1-已上线 2-已下线',
     created_by BIGINT UNSIGNED NOT NULL COMMENT '创建者 ID',
@@ -63,11 +101,11 @@ CREATE TABLE spots (
     INDEX idx_water_type (water_type),
     INDEX idx_status (status),
     INDEX idx_created_by (created_by),
-    FOREIGN KEY (created_by) REFERENCES users(id)
+    CONSTRAINT fk_spots_created_by FOREIGN KEY (created_by) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钓点表';
 
 -- 作钓记录表
-CREATE TABLE logs (
+CREATE TABLE IF NOT EXISTS logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '用户 ID',
     spot_id BIGINT UNSIGNED DEFAULT NULL COMMENT '钓点 ID',
@@ -99,12 +137,12 @@ CREATE TABLE logs (
     INDEX idx_spot_id (spot_id),
     INDEX idx_log_date (log_date),
     INDEX idx_public (is_public, status),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (spot_id) REFERENCES spots(id)
+    CONSTRAINT fk_logs_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_logs_spot FOREIGN KEY (spot_id) REFERENCES spots(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作钓记录表';
 
 -- 渔获明细表
-CREATE TABLE log_catches (
+CREATE TABLE IF NOT EXISTS log_catches (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     log_id BIGINT UNSIGNED NOT NULL COMMENT '作钓记录 ID',
     fish_type VARCHAR(50) NOT NULL COMMENT '鱼种',
@@ -113,11 +151,11 @@ CREATE TABLE log_catches (
     photo_url VARCHAR(255) DEFAULT NULL COMMENT '照片 URL',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_log_id (log_id),
-    FOREIGN KEY (log_id) REFERENCES logs(id) ON DELETE CASCADE
+    CONSTRAINT fk_log_catches_log FOREIGN KEY (log_id) REFERENCES logs(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='渔获明细表';
 
 -- 钓点评价表
-CREATE TABLE spot_reviews (
+CREATE TABLE IF NOT EXISTS spot_reviews (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     spot_id BIGINT UNSIGNED NOT NULL COMMENT '钓点 ID',
     user_id BIGINT UNSIGNED NOT NULL COMMENT '用户 ID',
@@ -131,12 +169,12 @@ CREATE TABLE spot_reviews (
     UNIQUE KEY uk_spot_user (spot_id, user_id),
     INDEX idx_spot_id (spot_id),
     INDEX idx_rating (rating),
-    FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_spot_reviews_spot FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
+    CONSTRAINT fk_spot_reviews_user FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='钓点评价表';
 
 -- 二手商品表
-CREATE TABLE items (
+CREATE TABLE IF NOT EXISTS items (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '卖家 ID',
     category TINYINT NOT NULL COMMENT '分类 1-拟饵 2-竿子 3-轮子 4-线组 5-配件 6-其他',
@@ -145,7 +183,7 @@ CREATE TABLE items (
     model VARCHAR(100) DEFAULT NULL COMMENT '型号',
     title VARCHAR(200) NOT NULL COMMENT '标题',
     description TEXT DEFAULT NULL COMMENT '详细描述',
-    condition TINYINT NOT NULL COMMENT '成色 1-全新 2-95 新 3-9 新 4-8 新 5-7 新 6-战斗成色',
+    `condition` TINYINT NOT NULL COMMENT '成色 1-全新 2-95 新 3-9 新 4-8 新 5-7 新 6-战斗成色',
     price DECIMAL(10,2) NOT NULL COMMENT '售价',
     original_price DECIMAL(10,2) DEFAULT NULL COMMENT '原价',
     photos JSON NOT NULL COMMENT '照片 URLs',
@@ -166,30 +204,11 @@ CREATE TABLE items (
     INDEX idx_price (price),
     INDEX idx_location (province, city),
     INDEX idx_created (created_at DESC),
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_items_user FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='二手商品表';
 
--- 消息表
-CREATE TABLE messages (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    conversation_id VARCHAR(64) NOT NULL COMMENT '会话 ID',
-    sender_id BIGINT UNSIGNED NOT NULL COMMENT '发送者 ID',
-    receiver_id BIGINT UNSIGNED NOT NULL COMMENT '接收者 ID',
-    type TINYINT DEFAULT 1 COMMENT '类型 1-文本 2-图片 3-商品卡片 4-钓点卡片',
-    content TEXT NOT NULL COMMENT '消息内容',
-    media_url VARCHAR(255) DEFAULT NULL COMMENT '媒体 URL',
-    is_read TINYINT DEFAULT 0 COMMENT '是否已读',
-    is_deleted TINYINT DEFAULT 0 COMMENT '是否删除',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_conversation (conversation_id),
-    INDEX idx_sender (sender_id, created_at DESC),
-    INDEX idx_receiver (receiver_id, is_read, created_at DESC),
-    FOREIGN KEY (sender_id) REFERENCES users(id),
-    FOREIGN KEY (receiver_id) REFERENCES users(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息表';
-
 -- 视频表
-CREATE TABLE videos (
+CREATE TABLE IF NOT EXISTS videos (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '上传者 ID',
     title VARCHAR(200) NOT NULL COMMENT '标题',
@@ -214,39 +233,35 @@ CREATE TABLE videos (
     INDEX idx_status (status),
     INDEX idx_created (created_at DESC),
     INDEX idx_play_count (play_count DESC),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (spot_id) REFERENCES spots(id)
+    CONSTRAINT fk_videos_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_videos_spot FOREIGN KEY (spot_id) REFERENCES spots(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='视频表';
 
--- 资讯表
-CREATE TABLE articles (
+-- 消息表
+CREATE TABLE IF NOT EXISTS messages (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(200) NOT NULL COMMENT '标题',
-    summary VARCHAR(500) DEFAULT NULL COMMENT '摘要',
-    content TEXT DEFAULT NULL COMMENT '内容',
-    cover_url VARCHAR(255) DEFAULT NULL COMMENT '封面图',
-    source_name VARCHAR(100) NOT NULL COMMENT '来源名称',
-    source_url VARCHAR(500) DEFAULT NULL COMMENT '原文链接',
-    author VARCHAR(100) DEFAULT NULL COMMENT '作者',
-    category TINYINT DEFAULT 1 COMMENT '分类 1-新闻 2-赛事 3-评测 4-教学 5-新品',
-    tags JSON DEFAULT NULL COMMENT '标签',
-    view_count INT DEFAULT 0 COMMENT '阅读数',
-    favorite_count INT DEFAULT 0 COMMENT '收藏数',
-    crawl_source VARCHAR(50) DEFAULT NULL COMMENT '抓取来源标识',
-    crawl_time TIMESTAMP DEFAULT NULL COMMENT '抓取时间',
-    status TINYINT DEFAULT 1 COMMENT '状态 1-已发布 0-隐藏',
-    is_recommend TINYINT DEFAULT 0 COMMENT '是否推荐',
+    conversation_id VARCHAR(64) NOT NULL COMMENT '会话 ID',
+    sender_id BIGINT UNSIGNED NOT NULL COMMENT '发送者 ID',
+    receiver_id BIGINT UNSIGNED NOT NULL COMMENT '接收者 ID',
+    type TINYINT DEFAULT 1 COMMENT '类型 1-文本 2-图片 3-商品卡片 4-钓点卡片',
+    content TEXT NOT NULL COMMENT '消息内容',
+    media_url VARCHAR(255) DEFAULT NULL COMMENT '媒体 URL',
+    is_read TINYINT DEFAULT 0 COMMENT '是否已读',
+    is_deleted TINYINT DEFAULT 0 COMMENT '是否删除',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    published_at TIMESTAMP DEFAULT NULL COMMENT '发布时间',
-    INDEX idx_category (category),
-    INDEX idx_status (status),
-    INDEX idx_recommend (is_recommend),
-    INDEX idx_published (published_at DESC),
-    INDEX idx_crawl_time (crawl_time)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资讯表';
+    INDEX idx_conversation (conversation_id),
+    INDEX idx_sender (sender_id, created_at DESC),
+    INDEX idx_receiver (receiver_id, is_read, created_at DESC),
+    CONSTRAINT fk_messages_sender FOREIGN KEY (sender_id) REFERENCES users(id),
+    CONSTRAINT fk_messages_receiver FOREIGN KEY (receiver_id) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息表';
+
+-- ============================================
+-- 关联表（收藏、点赞、关注、评论）
+-- ============================================
 
 -- 收藏表
-CREATE TABLE favorites (
+CREATE TABLE IF NOT EXISTS favorites (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '用户 ID',
     target_type TINYINT NOT NULL COMMENT '类型 1-作钓记录 2-钓点 3-二手商品 4-视频 5-资讯',
@@ -255,11 +270,11 @@ CREATE TABLE favorites (
     UNIQUE KEY uk_user_target (user_id, target_type, target_id),
     INDEX idx_user_id (user_id),
     INDEX idx_target (target_type, target_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_favorites_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收藏表';
 
 -- 点赞表
-CREATE TABLE likes (
+CREATE TABLE IF NOT EXISTS likes (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '用户 ID',
     target_type TINYINT NOT NULL COMMENT '类型 1-作钓记录 2-钓点评价 3-二手商品 4-视频 5-评论',
@@ -267,11 +282,11 @@ CREATE TABLE likes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY uk_user_target (user_id, target_type, target_id),
     INDEX idx_target (target_type, target_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_likes_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='点赞表';
 
 -- 关注表
-CREATE TABLE follows (
+CREATE TABLE IF NOT EXISTS follows (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     follower_id BIGINT UNSIGNED NOT NULL COMMENT '关注者 ID',
     following_id BIGINT UNSIGNED NOT NULL COMMENT '被关注者 ID',
@@ -279,12 +294,12 @@ CREATE TABLE follows (
     UNIQUE KEY uk_follower_following (follower_id, following_id),
     INDEX idx_follower (follower_id),
     INDEX idx_following (following_id),
-    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_follows_follower FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_follows_following FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='关注表';
 
 -- 评论表
-CREATE TABLE comments (
+CREATE TABLE IF NOT EXISTS comments (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL COMMENT '用户 ID',
     target_type TINYINT NOT NULL COMMENT '类型 1-作钓记录 2-视频 3-资讯 4-二手商品',
@@ -298,12 +313,16 @@ CREATE TABLE comments (
     INDEX idx_target (target_type, target_id, created_at),
     INDEX idx_user (user_id),
     INDEX idx_parent (parent_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+    CONSTRAINT fk_comments_user FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_comments_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评论表';
 
+-- ============================================
+-- 管理员相关表
+-- ============================================
+
 -- 管理员表
-CREATE TABLE admins (
+CREATE TABLE IF NOT EXISTS admins (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT UNSIGNED NOT NULL UNIQUE COMMENT '关联用户 ID',
     username VARCHAR(50) NOT NULL UNIQUE COMMENT '登录用户名',
@@ -314,11 +333,11 @@ CREATE TABLE admins (
     last_login_at TIMESTAMP DEFAULT NULL,
     last_login_ip VARCHAR(50) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_admins_user FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
 
 -- 操作日志表
-CREATE TABLE admin_logs (
+CREATE TABLE IF NOT EXISTS admin_logs (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     admin_id BIGINT UNSIGNED NOT NULL COMMENT '管理员 ID',
     action VARCHAR(50) NOT NULL COMMENT '操作类型',
@@ -332,6 +351,21 @@ CREATE TABLE admin_logs (
     INDEX idx_created (created_at DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员操作日志表';
 
--- 插入默认管理员 (密码：admin123, 实际使用请修改)
+-- ============================================
+-- 初始数据（可选）
+-- ============================================
+
+-- 插入测试用户（开发环境使用，生产环境请删除或修改）
+-- INSERT INTO users (openid, nickname, avatar, gender, region) VALUES 
+-- ('test_openid_001', '测试用户', 'https://example.com/avatar.png', 1, '浙江 - 杭州');
+
+-- 插入默认管理员账号（密码需要单独加密后插入）
+-- 步骤 1: 先创建用户
 -- INSERT INTO users (openid, nickname, is_admin) VALUES ('admin_openid', '系统管理员', 1);
+-- 步骤 2: 创建管理员账号（密码使用 bcrypt 加密）
 -- INSERT INTO admins (user_id, username, password_hash, role) VALUES (1, 'admin', '$2b$10$...', 1);
+
+-- ============================================
+-- 完成提示
+-- ============================================
+SELECT 'LureBin 数据库初始化完成！' AS status;

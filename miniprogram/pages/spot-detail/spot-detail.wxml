@@ -34,11 +34,11 @@
     <view class="section-title">钓点信息</view>
     <view class="detail-row">
       <text class="label">最佳季节</text>
-      <text class="value">{{(spot.best_seasons || []).join('、')}}</text>
+      <text class="value">{{bestSeasonsText}}</text>
     </view>
     <view class="detail-row">
       <text class="label">配套设施</text>
-      <text class="value">{{(spot.facilities || []).join('、')}}</text>
+      <text class="value">{{facilitiesText}}</text>
     </view>
     <view class="detail-row">
       <text class="label">访问次数</text>

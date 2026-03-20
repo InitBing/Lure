@@ -31,7 +31,13 @@ Page({
     try {
       const res = await app.request(`/spots/${this.data.spotId}`);
       if (res.code === 0) {
-        this.setData({ spot: res.data.spot });
+        const spot = res.data.spot;
+        // 预处理数组字段，避免 WXML 中调用 join()
+        this.setData({
+          spot: spot,
+          bestSeasonsText: (spot.best_seasons || []).join('、'),
+          facilitiesText: (spot.facilities || []).join('、')
+        });
         // 检查是否已收藏
         this.checkFavorite();
       }

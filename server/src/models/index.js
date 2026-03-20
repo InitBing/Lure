@@ -2,7 +2,7 @@
  * 模型导出
  */
 
-const sequelize = require('../config/database');
+const { sequelize } = require('../config/database');
 const { Op } = require('sequelize');
 
 const User = require('./User');

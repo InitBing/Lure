@@ -3,7 +3,7 @@
  */
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { sequelize } = require('../config/database');
 
 const Article = sequelize.define('Article', {
   id: {
